@@ -30,12 +30,20 @@ function send(res, code, body, headers = {}) {
   res.end(isText ? body : JSON.stringify(body));
 }
 
-/** 입력: 요청 / 출력: 본문 객체(JSON 또는 form) / 깨지는 조건: 1MB 넘으면 Error(413), JSON이 깨지면 Error(400) */
+const MAX_BODY = 1e6; // 바이트 — 글자 수로 세면 한글은 3배까지 통과한다
+
+/** 입력: 요청 / 출력: 본문 객체(JSON 또는 form) / 깨지는 조건: 1MB(바이트) 넘으면 Error(413), JSON이 깨지면 Error(400). 넘겨도 끝까지 받아 버린다 — 도중에 끊으면 413 응답이 못 간다 */
 function readBody(req) {
   return new Promise((ok, fail) => {
-    let s = "";
-    req.on("data", c => { s += c; if (s.length > 1e6) { fail(Object.assign(new Error("본문이 너무 크다"), { status: 413 })); req.destroy(); } });
+    let chunks = [], size = 0;
+    req.on("data", c => {
+      size += c.length;
+      if (size <= MAX_BODY) return void chunks.push(c);
+      if (chunks) { chunks = null; fail(Object.assign(new Error("본문이 너무 크다"), { status: 413 })); }
+    });
     req.on("end", () => {
+      if (!chunks) return;
+      const s = Buffer.concat(chunks).toString("utf8");
       if (!s) return ok({});
       if (/json/.test(req.headers["content-type"] || "")) { try { ok(JSON.parse(s)); } catch { fail(Object.assign(new Error("JSON 형식 오류"), { status: 400 })); } }
       else ok(Object.fromEntries(new URLSearchParams(s)));

@@ -44,3 +44,15 @@ test("[D6] 로그인 오류: 틀린 비밀번호·없는 아이디는 401, 재�
     assert.strictEqual((await call(b.port, "GET", "/api/me", { cookie: c })).status, hasStore ? 200 : 401);
   } finally { await b.stop(); }
 });
+test("[D6] 본문 크기: 실제 경로 POST /login도 readBody 규칙을 탄다 — 1MB 초과는 413, 깨진 JSON은 400", async () => {
+  const app = await boot();
+  try {
+    const big = await call(app.port, "POST", "/login", { body: { id: "x".repeat(1e6), password: "x" } });
+    assert.strictEqual(big.status, 413); assert.match(big.body.error, /너무 크다/);
+    const req = await new Promise((ok, fail) => {
+      const r = require("node:http").request({ host: "127.0.0.1", port: app.port, method: "POST", path: "/login", headers: { "Content-Type": "application/json" } }, res => { res.resume(); res.on("end", () => ok(res.statusCode)); });
+      r.on("error", fail); r.end("{깨짐");
+    });
+    assert.strictEqual(req, 400);
+  } finally { await app.stop(); }
+});
