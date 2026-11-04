@@ -1,0 +1,9 @@
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+# 하네스 단계 지시문 사본(참고용, 커밋하지 않음)
+_playbook/
+# 로컬 DB(시작할 때 다시 만든다)·역할 탭의 커밋 준비 목록
+var/
+out/ready_*.txt

@@ -1,0 +1,13 @@
+{
+  "note": "모의 — 하네스 시험용 가상 도메인: 창고 피킹. 통로(aisle)는 앞쪽 복도로만 갈아탈 수 있다. 출발·도착은 통로 0의 칸 0.",
+  "aisle_gap": 3,
+  "picks": [
+    { "item": "P1", "aisle": 4, "slot": 2 },
+    { "item": "P2", "aisle": 1, "slot": 7 },
+    { "item": "P3", "aisle": 4, "slot": 9 },
+    { "item": "P4", "aisle": 2, "slot": 1 },
+    { "item": "P5", "aisle": 1, "slot": 3 },
+    { "item": "P6", "aisle": 5, "slot": 4 },
+    { "item": "P7", "aisle": 2, "slot": 6 }
+  ]
+}

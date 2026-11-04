@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>app</title>
+<style>
+  body { font: 16px/1.5 system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; color: #1b1b1b; background: #fff; }
+  form, #me { display: grid; gap: .5rem; padding: 1rem; border: 1px solid #ccc; border-radius: 6px; }
+  input, button { font: inherit; padding: .4rem .6rem; }
+  .err { color: #b00020; }
+  [hidden] { display: none !important; } /* 위 display: grid가 hidden 속성을 덮지 않게 */
+</style>
+</head>
+<body>
+<h1>app</h1>
+<!-- 경로는 전부 상대 경로(앞에 / 없음) — 미리보기 프록시 아래에서도 같은 주소로 간다 -->
+<p id="info" hidden>서버 동작 중 — 로그인 부품 없음(<a href="health">health</a>)</p>
+<form id="login" hidden>
+  <label>아이디 <input name="id" autocomplete="username" required></label>
+  <label>비밀번호 <input name="password" type="password" autocomplete="current-password" required></label>
+  <button>로그인</button>
+  <p id="msg" class="err" role="alert"></p>
+</form>
+<section id="me" hidden>
+  <p>로그인: <b id="who"></b> (<span id="role"></span>)</p>
+  <button id="logout">로그아웃</button>
+</section>
+<script>
+const $ = id => document.getElementById(id);
+async function refresh() {
+  const r = await fetch("api/me");
+  const signedIn = r.ok, noAuth = r.status === 404; // 404 = 로그인 부품을 안 깔았다
+  $("info").hidden = !noAuth; $("login").hidden = signedIn || noAuth; $("me").hidden = !signedIn;
+  if (signedIn) { const me = await r.json(); $("who").textContent = me.id; $("role").textContent = me.role; }
+}
+$("login").addEventListener("submit", async e => {
+  e.preventDefault();
+  const body = JSON.stringify(Object.fromEntries(new FormData(e.target)));
+  const r = await fetch("login", { method: "POST", headers: { "Content-Type": "application/json" }, body });
+  $("msg").textContent = r.ok ? "" : (await r.json()).error;
+  refresh();
+});
+$("logout").addEventListener("click", async () => { await fetch("logout", { method: "POST" }); refresh(); });
+refresh();
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+.git
+var
+out
+node_modules
+_playbook
+.agents
