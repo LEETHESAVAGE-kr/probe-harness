@@ -32,7 +32,7 @@ node /tmp/harness/bootstrap.mjs            # 자료 정리형이면 --mode docs,
 | `templates/dev/` | PLAN · LOG · DECISIONS · VERIFY · README_RUN · REQUIREMENTS · PROVE(효과 비교표, `$prove`가 out/prove.md로) |
 | `templates/docs/` | INTERVIEW · AGREEMENT · SOURCE_MATRIX · FINDINGS · REPORT · DECISIONS · VERIFY · HANDOFF |
 | `templates/changes_log.md`, `portal_check.md` | 데이터 전후 비교표 · 외부 자료 대조표 |
-| `playbook/` | 사람이 읽는 것 4개: RUN(시험 중 여는 시간표 — 지시 틀·탭 7칸·단계마다 치는 것 1개·볼 것·터지는 것) · PROMPTS(붙여 넣는 완성 프롬프트, `refs/BOXES.md`에서 `scripts/gen_prompts.mjs`가 생성) · ASK(담당자 질문 상한·DM 4개) · DEFEND(제출 전 "설명 준비" 읽는 순서·출제 6유형). bootstrap이 작업 폴더 `_playbook/`에 사본을 두고 `.gitignore`에 넣는다 |
+| `playbook/` | 사람이 읽는 것 4개: RUN(시험 중 여는 시간표 — 지시 틀·창 8개·단계마다 치는 것 1개·볼 것·터지는 것) · PROMPTS(붙여 넣는 완성 프롬프트, `refs/BOXES.md`에서 `scripts/gen_prompts.mjs`가 생성) · ASK(담당자 질문 상한·DM 4개) · DEFEND(제출 전 "설명 준비" 읽는 순서·출제 6유형). bootstrap이 작업 폴더 `_playbook/`에 사본을 두고 `.gitignore`에 넣는다 |
 | `refs/` | 평소엔 안 여는 참고: BOXES(PROMPTS.md의 원본 — 상자 본문·지시 4줄) · TAILS(단계별 꼬리 상황) · QUESTION_BANK(질문 순서·서술형 22개·용어 카드) · ENV_FACTS · DOMAIN_SEMI. 하네스 폴더에만 있다 |
 | `scripts/` | node 표준 라이브러리만: `inventory.mjs`(행 수·빈칸·중복·코드값·날짜 범위·키별 요약) · `changes_log.mjs`(전후 건수·합계 행) · `fetch_portal.mjs`(주소 → 원문 저장·행 수) · `readme_to_requirements.mjs`(README → REQUIREMENTS 표·필수 파일 껍데기) · `check_evidence.mjs`(제출 전 점검 판정, README 대조 포함) · `summary10.mjs`(10줄 요약 뼈대) · `diag_web.mjs`(빈 화면 원인 5단계) · `screen_check.mjs`(역할별 화면 확인) · `prove_table.mjs`(효과 비교표 채우기·대조) · `handoff.mjs`(역할 탭 커밋 목록 모으기) |
 | `scaffold/node/`, `scaffold/python/` | 의존성 0 서버 뼈대(0.0.0.0, `PORT`) + 스모크 테스트 |

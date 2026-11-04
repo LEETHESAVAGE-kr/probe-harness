@@ -50,5 +50,5 @@ S5 = 서버를 띄워 curl 출력을 out/browser_check.txt에, 안 되는 것은
 | `$debug` | 재현 → 가설 1개씩 → 원인만 수정, 3번 실패면 멈춤 |
 | `$screen` | 역할별 화면 → out/screen_check.md |
 | `$prove` | 기준안·하한·우리 안 → out/prove.md |
-| `$role-a`·`$role-c`·`$role-d`·`$role-b`·`$role-a2` | 3탭+리뷰어: A 메인(유일한 커밋)·C 문서·D 데이터·측정(S3~S5, `$prove` 필수)·B S6 리뷰어 |
+| `$role-a`·`$role-c`·`$role-d`·`$role-b`·`$role-a2` | 3탭+리뷰어: A 메인(코드 커밋 담당)·C 문서·D 데이터·측정(S3~S5, `$prove` 필수)·B S6 리뷰어 |
 - skill이 안 보이면 `_playbook/PROMPTS.md`의 같은 이름 블록을 붙인다.

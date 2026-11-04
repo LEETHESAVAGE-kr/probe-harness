@@ -76,13 +76,13 @@ test("C3 $feat 묶음: '묶음:' 범위 줄이 있을 때만, 같은 모듈·최
   assert.match(rd("refs/BOXES.md").split(/^## /m).find(b => b.startsWith("feat\n")), /묶음 불가/);
 });
 
-test("C5 $role-a2: 배포 목록, 공용 파일 읽기만, 'A에게 요청', [A2] 커밋 접두, 커밋 거부 문구, RUN S4 켜는 조건·복구 3단계, 탭 7", () => {
+test("C5 $role-a2: 배포 목록, 공용 파일 읽기만, 'A에게 요청', [A2] 커밋 접두, 커밋 거부 문구, RUN S4 켜는 조건·복구 3단계, 창 3", () => {
   const s = rd(".agents/skills/role-a2/SKILL.md"), run = rd("playbook/RUN.md");
   assert.ok(SKILLS.includes("role-a2")); assert.match(rd("bootstrap.sh"), / role-a2 /);
   const d = tmp(); boot(parseArgs(["--target", d]), HARNESS); assert.ok(fs.existsSync(path.join(d, ".agents/skills/role-a2/SKILL.md")));
   for (const k of ["**읽기만**", "A에게 요청: server.js에 /api/x → src/x.js 연결", "out/ready_a2.txt", "[S 4/6][A2] R7", "충돌 — A 소유 파일 변경됨:", "git add -A` 금지"]) assert.ok(s.includes(k), k);
   for (const k of ["A2 **기본 켬**", "첫 A 커밋 확인 뒤", "행 ≤8", "A2 충돌 복구", "git stash push", "git stash pop"]) assert.ok(run.includes(k), k);
-  assert.match(run, /^\| 7 \| spare \| .*\$role-a2/m);
+  assert.match(run, /^\| 3 \| A2 구현 \| .*\$role-a2/m);
 });
 
 test("C7 check_evidence: 만들 것인데 상태 빈 행 → WARN 'n행 — R4 R9'(안 만들 것은 세지 않음), 훅 8개 ○/× 한 줄, ×면 '서술형 재료 없음' WARN, 다 있으면 8/8 PASS", () => {

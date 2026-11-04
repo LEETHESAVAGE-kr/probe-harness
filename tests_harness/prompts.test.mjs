@@ -34,7 +34,7 @@ test("v2.8-7 블록 수: 명령 16개(s0·s1·ask·algo·plan·s3·feat·role-a2
     const b = B[n] || [];
     if (b.length !== 1) { bad.push(`${n}: 블록 ${b.length}개`); continue; }
     if (!/^(S\d|아무|결과|테스트|담당자|같은|"완료")/.test(b[0].when)) bad.push(`${n}: 언제 줄이 S번호·상황으로 시작하지 않음`);
-    if (!b[0].when.includes("탭")) bad.push(`${n}: 언제 줄에 누구 탭인지 없음`);
+    if (!/[탭창]/.test(b[0].when)) bad.push(`${n}: 언제 줄에 누구 탭인지 없음`);
     if (!/^비울 칸: \S/.test(b[0].after)) bad.push(`${n}: 비울 칸 줄 없음`);
   }
   assert.deepStrictEqual(bad, []);

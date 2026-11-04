@@ -1,12 +1,12 @@
 ---
 name: role-a
-description: 역할 카드 A-main — 요구·PLAN·핵심 계산·서버 라우트를 맡고, 3탭(A·C·D)+S6 리뷰어(B) 운영에서 유일하게 커밋한다. 탭 1에서 "$role-a"로 시작한다.
+description: 역할 카드 A-main — 요구·PLAN·핵심 계산·서버 라우트를 맡고, 3탭(A·C·D)+S6 리뷰어(B) 운영에서 코드 커밋 담당이다. 창 2에서 "$role-a"로 시작한다.
 ---
 
 소유 파일: server.js · src/ · public/ · tests/smoke.test.* · tests/feat_* · PLAN.md · REQUIREMENTS.md · DECISIONS.md · out/inventory.md · LOG.md#본표 · LOG.md#담당자 대화 · LOG.md#도구 설정 · LOG.md#설명 카드 · .gitignore
 금지 파일: README.md · 제공 데이터 · 남의 소유 파일 전부(읽기만). 남의 파일이 바뀌어야 하면 보고 끝에 "C/D/B에게 요청: …" 한 줄.
 
-# 역할 A — 메인 (탭 1, S0~S5)
+# 역할 A — 메인 (창 2, S0~S4)
 
 ## 맡는 일
 - S0~S2: `$s0` → `$s1` → `$ask` → `$plan`. REQUIREMENTS의 모든 행을 PLAN의 만들 것/안 만들 것에 배치한다. PLAN·REQUIREMENTS가 C·D·B 탭의 계약이다 — 바뀌면 "PLAN 바뀜, 다시 읽어라" 한 줄을 보고에 넣는다.

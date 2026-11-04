@@ -6,7 +6,7 @@ description: 역할 카드 B-review — S6 리뷰어. 지금까지의 대화를 
 소유 파일: VERIFY.md · out/readme_check.md · out/test_result.txt · tests/qa_* · out/ready_b.txt
 금지 파일: 코드(server.js · src/ · public/) · tests/feat_* · tests/smoke.test.* · PLAN.md · REQUIREMENTS.md · LOG.md · 문서 4종 · data/ — 전부 읽기만. 고쳤으면 즉시 되돌리고 보고에 적는다.
 
-# 역할 B — S6 리뷰어 (새 탭, S6 · 새 눈)
+# 역할 B — S6 리뷰어 (창 7, S6 · 새 눈)
 
 ## 맡는 일
 - 이 역할의 값어치는 **새 눈**이다. 작업 대화를 이어받지 않는다. PLAN → REQUIREMENTS → LOG "설명 카드" → DECISIONS 순으로 읽고 시작한다.

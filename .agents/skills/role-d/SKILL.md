@@ -6,7 +6,7 @@ description: 역할 카드 D-data — 3탭 운영(A·C·D + S6 B)의 데이터·
 소유 파일: data/prepared/ · scripts/ · out/changes_log.md · out/screen_check.md · out/screens/ · out/prove.md · out/prove_*.json · out/browser_check.txt · out/scale_check.txt · out/concurrency_check.txt · out/docker_build.txt · out/export_sample.json · out/schema_check.txt · out/ready_d.txt
 금지 파일: 제공 원본 데이터 · 코드(server.js · src/ · public/) · tests/ · PLAN.md · REQUIREMENTS.md · LOG.md · 문서 4종 — 전부 읽기만. 고쳤으면 즉시 되돌리고 보고에 적는다.
 
-# 역할 D — 데이터·측정 (탭 3, S3~S5)
+# 역할 D — 데이터·측정 (창 5, S3~S5)
 
 ## 맡는 일 (시간 순)
 - **첫 일은 데이터셋 2벌**(A와 독립이라 기다림이 없다): README가 데이터셋 준비를 요구하면 원본을 바꾸지 않고 data/prepared/에 **정상 변경 1벌 + 잘못된 입력 1벌**을 만든다. 만드는 코드는 scripts/에(재현 가능하게). 결과나 오류 문구를 미리 박지 않는다 — 실제 검증 코드가 무엇을 잡는지 보게 둔다.

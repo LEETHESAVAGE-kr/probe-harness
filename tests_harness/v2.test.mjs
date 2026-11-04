@@ -47,7 +47,7 @@ test("G-1: RUN은 단계 7개마다 치는 것·내 눈·터지는 것 2줄, 머
   }
   // v2.6: 3탭(A·C·D) + S6 리뷰어(B) + server·check·spare = 7칸
   assert.strictEqual((s.match(/^\| [1-7] \| /gm) || []).length, 7);
-  assert.match(s, /S0 \*\*A\*\* \/ S1~S2 \*\*A\+C\*\* \/ S3~S5 \*\*A\+C\+D\*\* \/ S6 \*\*A\+B\+C\*\*/);
+  assert.match(s, /S0 \*\*A\*\* \/ S1~S2 창 2\(\+창 4 C\) \/ S3~S5 \*\*A\+C\+D\*\* \/ S6 \*\*A\+B\+C\*\*/);
   assert.match(s.trimEnd().split("\n").at(-1), /^4탭 확장.*refs\/PARALLEL4\.md/);
   assert.match(s, /틀린 고름 2개 이상이면 커밋하지 않는다/);
 });

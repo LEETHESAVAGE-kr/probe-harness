@@ -46,13 +46,13 @@ test("v2.6 $prove 블록: S4에 D 탭용, 지표 1개 · 현행/기준안/우리
   assert.match(stage(4), /D에 PROMPTS\.md ‘prove’ 블록/);
 });
 
-test("v2.6 탭 표: A-main · C-docs · D-data(S3~S5, 첫 일 데이터셋 2벌) · B-review(S6) + server·check·spare, 중계 10건 초과면 D를 S5로", () => {
-  const rows = RUN.split("\n").filter(l => /^\| [1-7] \| /.test(l));
-  assert.deepStrictEqual(rows.map(r => r.split("|")[2].trim()), ["A-main", "C-docs", "D-data", "B-review", "server", "check", "spare"]);
-  const d = rows.find(r => r.includes("D-data"));
-  assert.match(d, /데이터셋 2벌/); assert.match(d, /\| S3~S5 \|$/);
+test("창 표: 판단 · A 구현 · A2 구현 · C 문서 · D 측정(S3~S5) · 터미널 · B 리뷰 · 서버, 중계 10건 초과면 D를 S5로", () => {
+  const rows = RUN.split("\n").filter(l => /^\| [1-8] \| /.test(l));
+  assert.deepStrictEqual(rows.map(r => r.split("|")[2].trim()), ["판단", "A 구현", "A2 구현", "C 문서", "D 측정", "터미널", "B 리뷰", "서버"]);
+  const d = rows.find(r => r.includes("D 측정"));
+  assert.match(d, /\$role-d/); assert.match(d, /\| S3~S5 \|$/);
   assert.match(RUN, /중계가 10건을 넘으면 D를 S5로/);
-  assert.match(RUN, /S0 \*\*A\*\* \/ S1~S2 \*\*A\+C\*\* \/ S3~S5 \*\*A\+C\+D\*\* \/ S6 \*\*A\+B\+C\*\*/);
+  assert.match(RUN, /S0 \*\*A\*\* \/ S1~S2 창 2\(\+창 4 C\) \/ S3~S5 \*\*A\+C\+D\*\* \/ S6 \*\*A\+B\+C\*\*/);
 });
 
 test("v2.6 역할 카드: D가 S3~S5 기본(첫 일 데이터셋 2벌, 깊게 구간 $prove 필수), C는 문서, 소유 파일은 A·B·C·D 서로 겹치지 않는다", () => {
