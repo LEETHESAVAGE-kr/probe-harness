@@ -57,9 +57,9 @@ test("v2.8-3 $defend 초안 고르기: Q1~Q3마다 [초안A](숫자 중심)·[�
     for (const k of ["[초안A]", "[초안B]", "숫자 중심", "결정 중심", "유도 문장", "Q1-A Q2-B Q3-A처럼 답해라", "고른 쪽만 남기고", "LOG 본표"])
       assert.ok(s.includes(k), `${w} defend에 '${k}' 없음`);
   }
-  // DOC_QUESTION_BANK 1장의 유도 문장 셋(Q1 경계·Q2 되돌림·Q3 독립 측정)이 SKILL에 있다 — Codex는 저장소 밖 문서를 못 본다
+  // 유도 문장 셋(Q1 경계·Q2 검증 항목과 이유·Q3 AI 제안을 되돌린 사례)이 SKILL에 있다 — Codex는 저장소 밖 문서를 못 본다
   const s = rd(".agents/skills/defend/SKILL.md");
-  for (const k of ["딱 같은", "되돌렸다", "코드와 독립으로"]) assert.ok(s.includes(k), `유도 문장 '${k}' 없음`);
+  for (const k of ["딱 같은", "가장 먼저 검증할 항목", "되돌렸다"]) assert.ok(s.includes(k), `유도 문장 '${k}' 없음`);
 });
 
 test("v2.8-3 check_evidence: [초안A]·[초안B]가 남으면 [초안] WARN 그대로, 고르고 지우면 PASS", () => {

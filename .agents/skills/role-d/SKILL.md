@@ -3,7 +3,7 @@ name: role-d
 description: 역할 카드 D-data — 3탭 운영(A·C·D + S6 B)의 데이터·측정 탭(S3~S5). 첫 일은 데이터셋 2벌, S4 깊게 구간에 $prove 필수, S5 $verify·$screen. 커밋하지 않는다. 탭 3에서 "$role-d"로 시작한다(S3부터 — 중계가 10건을 넘으면 S5부터).
 ---
 
-소유 파일: data/prepared/ · scripts/ · out/changes_log.md · out/screen_check.md · out/screens/ · out/prove.md · out/prove_*.json · out/browser_check.txt · out/scale_check.txt · out/concurrency_check.txt · out/docker_build.txt · out/export_sample.json · out/schema_check.txt · out/ready_d.txt
+소유 파일: data/prepared/ · scripts/ · out/changes_log.md · out/screen_check.md · out/screens/ · out/prove.md · out/prove_*.json · out/browser_check.txt · out/scale_check.txt · out/concurrency_check.txt · out/docker_build.txt · out/export_sample.json · out/schema_check.txt · out/rule_check.txt · out/ready_d.txt
 금지 파일: 제공 원본 데이터 · 코드(server.js · src/ · public/) · tests/ · PLAN.md · REQUIREMENTS.md · LOG.md · 문서 4종 — 전부 읽기만. 고쳤으면 즉시 되돌리고 보고에 적는다.
 
 # 역할 D — 데이터·측정 (창 5, S3~S5)
@@ -13,7 +13,7 @@ description: 역할 카드 D-data — 3탭 운영(A·C·D + S6 B)의 데이터·
 - 데이터를 빼·바꾸·합치기 전마다 `node /tmp/harness/scripts/changes_log.mjs`로 out/changes_log.md에 전후 행을 남긴다(A의 요청이 오면 그 처리 전에).
 - S3 끝: `$screen`으로 로그인 1화면 이상 → out/screen_check.md·out/screens/. playwright가 없으면 "미측정" 표와 체크 목록을 사용자에게 넘긴다(판정을 꾸며 내지 않는다).
 - **S4 2패스(120~150분): `$prove` 필수** — PLAN 성공 기준에서 지표 1개, 현행(제공 실적이 있을 때)·기준안·우리 안·하한을 실제 실행해 out/prove_*.json → out/prove.md(표 숫자는 prove_table.mjs가 옮긴다). 35분 안에 안 끝나면 현행 vs 우리 안 두 줄로 줄인다.
-- S5 (`$verify`): 사용자가 띄운 서버에 ss·curl → out/browser_check.txt / 10배 입력 → out/scale_check.txt / 같은 쓰기 요청 2개 동시 → out/concurrency_check.txt / `sh scripts/verify_container.sh` → out/docker_build.txt(Docker가 없으면 SKIP 그대로) / 내보내기 샘플 스키마 대조 → out/schema_check.txt. 서버는 띄우거나 끄지 않는다. 이어서 `$screen` 전체.
+- S5 (`$verify`): 사용자가 띄운 서버에 ss·curl → out/browser_check.txt / 10배 입력 → out/scale_check.txt / 같은 쓰기 요청 2개 동시 → out/concurrency_check.txt / `sh scripts/verify_container.sh` → out/docker_build.txt(Docker가 없으면 SKIP 그대로) / 내보내기 샘플 스키마 대조 → out/schema_check.txt / 규칙 행별 위반 건수 → out/rule_check.txt. 서버는 띄우거나 끄지 않는다. 이어서 `$screen` 전체.
 - 실패한 측정은 고치지 않고 "PLAN 한계에 넣을 문장" 한 줄로 A에게 넘긴다.
 
 ## 커밋하지 않는다
