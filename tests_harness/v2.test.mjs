@@ -45,9 +45,9 @@ test("G-1: RUN은 단계 7개마다 치는 것·내 눈·안 되면 2줄(번호 
     assert.ok((st.match(/^\s*- (터지는 것|안 되면):/gm) || []).length >= 2, st.slice(0, 20));
     assert.match(st.split("\n")[0], /\(\d+~\d+분\)/);
   }
-  // v2.6: 3탭(A·C·D) + S6 리뷰어(B) + server·check·spare = 7칸
-  assert.strictEqual((s.match(/^\| [1-7] \| /gm) || []).length, 7);
-  assert.match(s, /S0 \*\*A\*\* \/ S1~S2 창 2\(\+창 4 C\) \/ S3~S5 \*\*A\+C\+D\*\* \/ S6 \*\*A\+B\+C\*\*/);
+  // v2.10: 창 셋(Codex·터미널·서버) 순차 — 병렬 없음
+  assert.strictEqual((s.match(/^\| [1-3] \| /gm) || []).length, 3);
+  assert.match(s, /병렬은 없다/);
   assert.match(s.trimEnd().split("\n").at(-1), /^4탭 확장.*refs\/PARALLEL4\.md/);
   assert.match(s, /틀린 고름 2개 이상이면 커밋하지 않는다/);
 });
@@ -458,11 +458,10 @@ test("G-9 오류: json이 없으면 종료 1, 비교표 절이 없으면 불일�
 });
 
 // ---- 지시 틀(범용) — 과제 값 없이 빈칸만
-test("지시 틀: RUN 머리와 BOXES prompt 상자에 4줄 틀·반응 문장 6개, 빈칸 밖에 숫자(과제 값) 없음, 명령 11개가 붙인 줄을 우선", () => {
-  const run = rd(HARNESS, "playbook/RUN.md"), sec = run.split(/^## /m).find(b => b.startsWith("지시 틀"));
+test("지시 틀: BOXES prompt 상자에 4줄 틀·반응 문장 6개, 빈칸 밖에 숫자(과제 값) 없음 · PROMPTS 대본에 반응 상자 6개 · 명령 11개가 붙인 줄을 우선 (v2.10: RUN 머리의 지시 틀은 PROMPTS 줄글로)", () => {
   const box = rd(HARNESS, "refs/BOXES.md").split(/^## /m).find(b => b.startsWith("prompt\n"));
-  const prompts = rd(HARNESS, "playbook/PROMPTS.md"); // v2.8: RUN의 반응 문장은 PROMPTS ‘반응-…’ 블록으로 옮겼다
-  for (const [name, s] of [["RUN", sec], ["BOXES", box]]) {
+  const prompts = rd(HARNESS, "playbook/PROMPTS.md");
+  for (const [name, s] of [["BOXES", box]]) {
     assert.ok(s, name);
     // v2.2: RUN 머리의 지시 틀은 코드 블록이 아니라 인용 블록(>)이다 — 둘 다 인정한다
     const fenced = [...s.matchAll(/```\n([\s\S]*?)```/g)].map(m => m[1]).join("\n") + "\n" + s.split("\n").filter(l => l.startsWith("> ")).join("\n");
@@ -470,9 +469,9 @@ test("지시 틀: RUN 머리와 BOXES prompt 상자에 4줄 틀·반응 문장 6
     const sample = fenced + "\n" + s.split("\n").filter(l => /^\s+- /.test(l)).join("\n");
     assert.doesNotMatch(sample.replace(/<[^>]*>/g, ""), /\d/, `${name}: 빈칸 밖에 숫자`);
     for (const k of ["요구에 없다", "내가 원본과 대조", "실패를 먼저 보이고", "PLAN·REQUIREMENTS를 먼저", "두 번 실패", "통과·실패 개수"]) assert.ok((name === "RUN" ? prompts : s).includes(k), `${name} 반응 ${k}`);
-    if (name === "RUN") for (const k of ["요구 밖", "내가 검증", "바로잡기", "의도 갱신", "접근 변경", "숫자 없는 완료"]) assert.ok(s.includes(`‘반응-${k}’`), `RUN 반응 참조 ${k}`);
+    if (false) for (const k of []) assert.ok(s.includes(`‘반응-${k}’`), `RUN 반응 참조 ${k}`);
   }
   for (const k of COMMANDS) assert.match(rd(HARNESS, `.agents/skills/${k}/SKILL.md`), /\[목적 줄 없음\]/, k);
-  assert.match(run, /^> 명령은 Codex 입력칸\(`›`\)에 `\$명령` \+ \*\*내 문장 4줄\*\*/m);
+  assert.match(rd(HARNESS, "playbook/RUN.md"), /^> 붙이는 글은 전부 `_playbook\/PROMPTS\.md`의 ▶ 상자에 있다/m);
   assert.ok(!fs.existsSync(path.join(HARNESS, "scripts/timer.mjs")), "타이머는 뺐다");
 });

@@ -5,7 +5,7 @@ description: S5 검증·측정 — 사용자가 띄운 서버에 ss·curl, 10배
 
 고치는 파일: out/browser_check.txt · out/scale_check.txt · out/concurrency_check.txt · out/docker_build.txt · out/export_sample.json · out/schema_check.txt · out/rule_check.txt · scripts/rule_check.* · out/ 아래 10배 입력 사본. 서버·코드·문서는 읽기만 한다.
 
-> 사용자가 명령 뒤에 붙인 목적·범위·하지 마라·내 판단·확인 줄은 이 파일의 지시보다 우선한다(고치는 파일 범위와 "멈춰라"는 그대로). 보고 첫 줄에 "이번 목적: …"을 그 문장 그대로 옮기고, 붙인 줄이 없으면 리스크 칸에 "[목적 줄 없음]"이라고 적는다.
+> 사용자가 명령 뒤에 붙인 문장(줄글이어도 된다 — 그 안의 목적·근거·범위·하지 마라·내 판단·확인)은 이 파일의 지시보다 우선한다(고치는 파일 범위와 "멈춰라"는 그대로). 보고 첫 줄에 "이번 목적: …"을 붙인 문장에서 한 줄로 옮기고, 붙인 문장이 없으면 리스크 칸에 "[목적 줄 없음]"이라고 적는다.
 
 # $verify — 검증·규모·동시성·컨테이너 (S5, 150~163분)
 

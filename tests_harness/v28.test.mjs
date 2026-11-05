@@ -48,7 +48,7 @@ test("v2.8-2 $feat 4문장 퀴즈: 문장 4개 × A/B, 하나는 미묘하게 �
     assert.doesNotMatch(s, /내 4문장을 기다린다/, `${w}: 옛 '내 4문장을 기다린다'가 남음`);
   }
   const s4 = stage(4);
-  assert.match(s4, /`1A 2B 3A 4B`처럼 답한다 — 비울 칸: 네 글자/);
+  assert.match(s4, /`1A 2B 3A 4B`처럼 답한다 — 비울 칸: 네 글자/); assert.match(s4, /틀린 고름 2개 이상이면 커밋하지 않는다/);
   assert.doesNotMatch(s4, /내 4문장: </, "RUN S4에 옛 '내 4문장: <…>' 줄");
 });
 
@@ -75,7 +75,7 @@ test("v2.8-4 RUN S5: $decide 블록(4줄 틀·빈칸 ≤3, 내 판단 <이유 �
   const s5 = stage(5), s6 = stage(6);
   assert.match(s5, /\$decide/);
   assert.doesNotMatch(RUN(), /내가 쓴다\. 건드리지 마라/);
-  assert.match(s6, /Q1-A Q2-B Q3-A로 고른다/);
+  assert.match(s6, /Q1-A Q2-B Q3-A`?로 고른다/);
   assert.doesNotMatch(s6, /\[초안\]`을 내 말로 고치며/);
   assert.ok(RUN().trimEnd().split("\n").length <= 170);
 });

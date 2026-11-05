@@ -11,7 +11,7 @@ const HARNESS = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 const rd = f => fs.readFileSync(path.join(HARNESS, f), "utf8");
 
 // 명령마다 핵심 어구와 금지 어구(PRD F2-2). must의 배열 원소는 "그중 하나면 된다".
-// 네 곳(SKILL · BOXES · AGENTS 표 · PROMPTS 블록) 모두에 must가 있어야 하고, never는 세 곳 중 한 곳에라도 있으면 실패.
+// 세 곳(SKILL · BOXES · AGENTS 표) 모두에(v2.10: PROMPTS는 줄글 대본이라 제외) must가 있어야 하고, never는 세 곳 중 한 곳에라도 있으면 실패.
 const PHRASES = {
   ask: { must: [["상한 없음", "개수 제한 없음"], "지목", "숫자를 제안"], never: ["10개 이하"] },
   plan: { must: ["모든 행", "빈 행 0"], never: ["3개 이하"] },
@@ -25,8 +25,6 @@ const places = k => ({
   SKILL: rd(`.agents/skills/${k}/SKILL.md`),
   BOXES: rd("refs/BOXES.md").split(/^## /m).find(b => b.startsWith(`${k}\n`)) || "",
   "AGENTS 표": rd("AGENTS.md").split(/\r?\n/).find(l => l.startsWith(`| \`$${k}\` |`)) || "",
-  // v2.8: 시험장에서 붙이는 것은 PROMPTS.md 블록이다 — 같은 어구가 있어야 한다
-  PROMPTS: rd("playbook/PROMPTS.md").split(/^### /m).find(b => b.startsWith(`${k}\n`)) || "",
 });
 
 for (const [k, { must, never }] of Object.entries(PHRASES)) {

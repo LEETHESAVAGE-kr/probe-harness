@@ -31,4 +31,4 @@ for f in RUN PROMPTS ASK DEFEND; do put "playbook/$f.md" "_playbook/$f.md"; done
 for d in tests out portal; do mkdir -p "$T/$d"; [ -e "$T/$d/.gitkeep" ] || : > "$T/$d/.gitkeep"; done
 if [ ! -d "$T/.git" ]; then git init -q "$T" && echo "  + .git"; fi
 echo "[bootstrap.sh] $PROV"
-echo '다음: 파일 목록에서 _playbook/PROMPTS.md 열기(막히면 RUN.md) → codex → /status → $s0'
+echo '다음: 파일 목록에서 _playbook/PROMPTS.md 열기(막히면 RUN.md) → 창 셋 → codex → /fast → /model → /status → $s0'

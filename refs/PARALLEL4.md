@@ -14,3 +14,4 @@
 | 7 | spare | 세션 교체용 · docker 빌드 로그 | — |
 - 가동 수: S0~S2 **A+C** / S3~S5 **A·B·C·D** / S6 **B·C**. 처음부터 4개를 돌리면 PLAN 없이 코드가 생긴다.
 - 중계는 나: B·C·D 보고 끝의 `A에게 요청: …` 줄을 복사해 A 탭에 붙인다. B·C·D는 `커밋 준비됨: 파일 목록`으로 멈추고 out/ready_*.txt에 남긴다. A가 `node /tmp/harness/scripts/handoff.mjs`(충돌 경고)의 `git add` 명령으로 커밋한다. 커밋 이력은 A 한 줄기. 계약은 PLAN·REQUIREMENTS다 — 바뀌면 A가 고치고 셋에게 `PLAN 바뀜, 다시 읽어라`, 소유 밖 파일을 고친 탭은 `되돌려라`.
+- A2(`$role-a2`, 창 3 새 codex): 첫 A 커밋 확인 뒤, PLAN '소유 파일 분할'이 있을 때만 켠다 — 행 ≤8이거나 모듈 경계가 없으면 안 켠다. A2 충돌 복구 3단계: `git status` → `git stash push -- <파일>` → A 커밋 → `git stash pop`.

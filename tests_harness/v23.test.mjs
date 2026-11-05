@@ -90,9 +90,9 @@ test("V4 LOG 양식: 담당자 대화 표가 4칸(태그 포함)이고 $ask 행�
 test("V5 RUN: S2 확인 시각 커밋과 S4 첫 기능 커밋에 'C의 커밋 준비됨 목록(handoff.mjs)도 함께' — v2.8부터 문장은 PROMPTS 블록, RUN은 그 단계에서 부른다", () => {
   const run = rd(HARNESS, "playbook/RUN.md"), stage = n => run.split(/^## (?=S\d )/m).find(s => s.startsWith(`S${n} `));
   const block = n => rd(HARNESS, "playbook/PROMPTS.md").split(/^### /m).find(b => b.startsWith(`${n}\n`)) || "";
-  assert.match(block("기록-합의"), /확인 받은 시각[^\n]*C의 커밋 준비됨 목록\(handoff\.mjs\)도 함께/);
-  assert.match(block("첫 기능 커밋"), /C의 커밋 준비됨 목록\(handoff\.mjs\)도 함께/);
-  assert.match(stage(2), /‘기록-합의’/); assert.match(stage(4), /‘첫 기능 커밋’/);
+  // v2.10: 창 셋 순차 — C·D 탭이 없어 handoff 문장은 PROMPTS 대본에서 빠졌다. 합의 기록 상자와 RUN 참조만 본다
+  assert.match(rd(HARNESS, "playbook/PROMPTS.md"), /확인 받은 시각: 〔HH:MM〕/);
+  assert.match(stage(2), /‘기록-합의’/); void block;
 });
 
 // ---- V6 서사 한 줄

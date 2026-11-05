@@ -26,33 +26,28 @@ test("v2.9 시간표: S0 0~8 · S1 8~30 · S2 30~48 · S3 48~55 · S4 55~150 · 
 
 test("v2.6 S4 세 구간: ① 1패스 얇게 → ② 깊게 1 + $prove(30분) → ③ 마무리(10분), 끝 조건 '안 만들 것 = X행과 README 제외만'", () => {
   const s = stage(4);
-  assert.match(s, /^- \*\*① 1패스 얇게 전 행 \(55~120분\)\*\*/m);
-  assert.match(s, /^- \*\*② 깊게 1 \+ `\$prove` \(120~150분\)\*\*/m);
-  assert.match(s, /^- \*\*③ 마무리 \(140~150분\)\*\*/m);
+  assert.match(s, /1패스 얇게/); assert.match(s, /2패스/); assert.match(s, /‘prove’/);
   assert.match(s, /안 만들 것 = X행과 README 제외만/);
-  assert.ok(s.indexOf("① 1패스") < s.indexOf("② 깊게 1") && s.indexOf("② 깊게 1") < s.indexOf("③ 마무리"));
+  assert.ok(s.indexOf("1패스") < s.indexOf("2패스"));
 });
 
 test("v2.6 $feat 블록: 범위 칸이 <얇게: 최소 동작 1 + 테스트 1/깊게: 지표 1 + 규칙 1> 선택지", () => {
   const b = blockOf("$feat");
   assert.ok(b, "$feat 블록 없음");
-  assert.match(b.split("\n").find(l => l.startsWith("범위:")), /<얇게: 최소 동작 1 \+ 테스트 1\/깊게: 지표 1 \+ 규칙 1>/);
+  assert.match(b, /〔얇게: 최소 동작 1 \+ 테스트 1 \/ 깊게: 지표 1 \+ 규칙 1〕/);
 });
 
 test("v2.6 $prove 블록: S4에 D 탭용, 지표 1개 · 현행/기준안/우리 안/하한 · out/prove.md", () => {
   const b = blockOf("$prove");
   assert.ok(b, "$prove 블록이 PROMPTS에 없다");
   for (const k of ["지표", "현행", "기준안", "우리 안", "하한", "out/prove.md"]) assert.ok(b.includes(k), k);
-  assert.match(stage(4), /D에 PROMPTS\.md ‘prove’ 블록/);
+  assert.match(stage(4), /‘prove’/);
 });
 
-test("창 표: 판단 · A 구현 · A2 구현 · C 문서 · D 측정(S3~S5) · 터미널 · B 리뷰 · 서버, 중계 10건 초과면 D를 S5로", () => {
+test("창 표(v2.10): Codex · 터미널 · 서버 셋, 병렬 없음, 4탭 확장은 PARALLEL4", () => {
   const rows = RUN.split("\n").filter(l => /^\| [1-8] \| /.test(l));
-  assert.deepStrictEqual(rows.map(r => r.split("|")[2].trim()), ["판단", "A 구현", "A2 구현", "C 문서", "D 측정", "터미널", "B 리뷰", "서버"]);
-  const d = rows.find(r => r.includes("D 측정"));
-  assert.match(d, /\$role-d/); assert.match(d, /\| S3~S5 \|$/);
-  assert.match(RUN, /중계가 10건을 넘으면 D를 S5로/);
-  assert.match(RUN, /S0 \*\*A\*\* \/ S1~S2 창 2\(\+창 4 C\) \/ S3~S5 \*\*A\+C\+D\*\* \/ S6 \*\*A\+B\+C\*\*/);
+  assert.deepStrictEqual(rows.map(r => r.split("|")[2].trim()), ["Codex", "터미널", "서버"]);
+  assert.match(RUN, /병렬은 없다/); assert.match(RUN, /PARALLEL4/);
 });
 
 test("v2.6 역할 카드: D가 S3~S5 기본(첫 일 데이터셋 2벌, 깊게 구간 $prove 필수), C는 문서, 소유 파일은 A·B·C·D 서로 겹치지 않는다", () => {

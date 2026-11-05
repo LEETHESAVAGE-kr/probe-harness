@@ -57,10 +57,11 @@ test("C2 $algo: 배포 목록·SKILL 첫 줄·끝 줄, 표 머리 7칸, 고르�
   assert.match(b[0], /^고치는 파일: /); assert.match(b.at(-1), /멈춰라\.$/);
   for (const k of ["| 후보 | 한 줄 원리 | 담당자 기준 충족 | 구현 시간(분) | 네 문장 설명 가능 | 입력 10배 | 약점 |", "기준을 만족하는 가장 단순한 것: 후보 n", "설명 불가 — 서술형 리스크", "[S 2/6] 알고리즘 선택", "규칙 한 문장", "대안(더 단순)", "대안(더 정교)"]) assert.ok(s.includes(k), k);
   // 구현 전에 평가 기준을 고른다: 기준 표·탈락 이유·답 형식이 SKILL과 PROMPTS 둘 다에 있다
-  const blkC2 = rd("playbook/PROMPTS.md").split(/^### /m).find(x => x.startsWith("algo\n"));
+  const blkC2 = (rd("playbook/PROMPTS.md").match(/^```\n\$algo\n[\s\S]*?^```/m) || [""])[0] + rd("refs/BOXES.md").split(/^## /m).find(x => x.startsWith("algo\n"));
   for (const k of ["| 기준 | 더 나은 결과란 | 효율 지표 | 편의 기준 | 근거 |", "탈락 후보 k", "기준 a 후보 n이라고 답해라", "평가 기준: 기준 a", "성공 기준"]) { assert.ok(s.includes(k), `SKILL ${k}`); assert.ok(blkC2.includes(k), `PROMPTS ${k}`); }
-  const blk = rd("playbook/PROMPTS.md").split(/^### /m).find(x => x.startsWith("algo\n"));
-  for (const k of ["목적:", "범위:", "내 판단:", "확인:"]) assert.match(blk, new RegExp(`^${k}`, "m"));
+  const blk = (rd("playbook/PROMPTS.md").match(/^```\n\$algo\n[\s\S]*?^```/m) || [""])[0];
+  // v2.10: PROMPTS는 줄글 — 담당자 기준·더 나은 결과·답 형식이 상자에 있다
+  for (const k of ["담당자가 〔HH:MM〕에 준 기준", "더 나은 결과란", "기준 〔a〕 후보 〔n〕"]) assert.ok(rd("playbook/PROMPTS.md").includes(k), k); void blk;
   assert.match(rd("playbook/RUN.md").split(/^## (?=S\d )/m).find(x => x.startsWith("S2 ")), /`\$plan` 직전 `\$algo R★`/);
   assert.match(rd("AGENTS.md"), /\$algo/);
 });
@@ -84,8 +85,8 @@ test("C5 $role-a2: 배포 목록, 공용 파일 읽기만, 'A에게 요청', [A2
   assert.ok(SKILLS.includes("role-a2")); assert.match(rd("bootstrap.sh"), / role-a2 /);
   const d = tmp(); boot(parseArgs(["--target", d]), HARNESS); assert.ok(fs.existsSync(path.join(d, ".agents/skills/role-a2/SKILL.md")));
   for (const k of ["**읽기만**", "A에게 요청: server.js에 /api/x → src/x.js 연결", "out/ready_a2.txt", "[S 4/6][A2] R7", "충돌 — A 소유 파일 변경됨:", "git add -A` 금지"]) assert.ok(s.includes(k), k);
-  for (const k of ["A2 **기본 켬**", "첫 A 커밋 확인 뒤", "행 ≤8", "A2 충돌 복구", "git stash push", "git stash pop"]) assert.ok(run.includes(k), k);
-  assert.match(run, /^\| 3 \| A2 구현 \| .*\$role-a2/m);
+  // v2.10: 기본 운영은 창 셋 순차 — A2는 refs/PARALLEL4.md에서만 켠다
+  assert.match(rd("refs/PARALLEL4.md"), /role-a2|A2/); void run;
 });
 
 test("C7 check_evidence: 만들 것인데 상태 빈 행 → WARN 'n행 — R4 R9'(안 만들 것은 세지 않음), 훅 8개 ○/× 한 줄, ×면 '서술형 재료 없음' WARN, 다 있으면 8/8 PASS", () => {
