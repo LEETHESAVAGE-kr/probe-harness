@@ -36,22 +36,52 @@ export function parseBoxes(text) {
   return out;
 }
 
-/** 입력: BOXES 본문 / 출력: PROMPTS.md 본문(LF) / 깨지는 조건: parseBoxes와 같다 */
-export function generate(text) {
-  const B = parseBoxes(text), cmd = new Set(PROMPT_CMDS);
+/** 입력: RUN 본문 / 출력: [{head, names, again}] — 블록마다 자리 하나: 번호 단계 본문(1. · - **①)에서 처음 부른 곳 → 없으면 그 밑 줄(내 눈·안 되면) → 없으면 강제 이동·치는 것 줄. 앞 단계에 자리가 있는 이름은 again / 깨지는 조건: 없음 */
+export function runOrder(runText) {
+  const stages = runText.replace(/\r\n/g, "\n").split(/^## (?=S\d )/m).slice(1), hits = [];
+  stages.forEach((st, si) => {
+    let step = 0;
+    st.split("\n").slice(1).forEach((l, li) => {
+      const main = /^\s*(\d+\.|- \*\*)/.test(l); if (main) step++;
+      const rank = main ? 0 : /^- (강제 이동|치는 것):/.test(l) ? 2 : 1;
+      for (const m of l.matchAll(/‘([^’]+)’/g)) hits.push({ n: m[1], si, step: rank === 2 ? 1e6 : step, rank, li, pos: m.index });
+    });
+  });
+  const home = new Map();
+  for (const r of [0, 1, 2]) for (const h of hits) if (h.rank === r && !home.has(h.n)) home.set(h.n, h);
+  const key = h => [h.si, h.step, h.rank, h.li, h.pos];
+  const cmp = (a, b) => { const x = key(a), y = key(b); for (let k = 0; k < x.length; k++) if (x[k] !== y[k]) return x[k] - y[k]; return 0; };
+  const placed = [...home.values()].sort(cmp);
+  return stages.map((st, si) => ({
+    head: st.split("\n")[0].trim(),
+    names: placed.filter(h => h.si === si).map(h => h.n),
+    again: [...new Set(hits.filter(h => h.si === si && h.rank < 2 && home.get(h.n).si < si).map(h => h.n))],
+  }));
+}
+
+/** 입력: BOXES 본문, RUN 본문(기본: playbook/RUN.md) / 출력: PROMPTS.md 본문(LF) — RUN 시간 순서대로 단계별 블록, RUN 단계에서 안 불리는 블록은 끝 '아무 때나' / 깨지는 조건: parseBoxes와 같다 */
+export function generate(text, runText = fs.readFileSync(path.join(HARNESS, "playbook/RUN.md"), "utf8")) {
+  const B = parseBoxes(text), by = new Map(B.map(b => [b.name, b])), used = new Set();
   const block = b => `### ${b.name}\n언제: ${b.when}\n\`\`\`\n${b.body}\n\`\`\`\n비울 칸: ${b.holes || "없음"}\n`;
+  const parts = [];
+  for (const st of runOrder(runText)) {
+    const own = st.names.filter(n => by.has(n) && !used.has(n));
+    own.forEach(n => used.add(n));
+    const again = st.again.filter(n => by.has(n));
+    parts.push(`## ${st.head}`, "", ...(again.length ? [`> 이 단계에서 다시 쓰는 블록(앞 단계에 있음): ${again.map(n => `‘${n}’`).join(" · ")}`, ""] : []), own.map(n => block(by.get(n))).join("\n"));
+  }
+  const rest = B.filter(b => !used.has(b.name));
   return [
     "# PROMPTS — 붙여 넣는 완성 프롬프트 (블록 = 명령 하나)",
     "",
     "> 블록을 통째로 복사해 Codex 입력칸(`›`)에 붙이고 `<…>` 칸만 바꾼다(선택지 `<가/나>`는 하나만 남긴다) — `$` 인식 여부와 무관, 첫 줄 `$이름`은 있어도 그만. `{…}`는 Codex가 채운다.",
     "> 생성 파일 — 손으로 고치지 마라. 원본은 하네스 `refs/BOXES.md`, 다시 만들기: `node scripts/gen_prompts.mjs`. 하네스가 `./.harness`에 있으면 `/tmp/harness`를 `./.harness`로 읽는다.",
+    "> 순서는 `RUN.md`와 같다 — 단계(S0~S6)마다 RUN의 번호 단계에서 처음 부르는 순서대로 놓았다. 위에서 아래로 내려가며 붙이면 된다.",
     "",
-    "## 명령",
+    ...parts,
+    "## 아무 때나 — 반응·예비 (RUN 단계 번호에 없는 블록)",
     "",
-    B.filter(b => cmd.has(b.name)).map(block).join("\n"),
-    "## 한 줄 지시",
-    "",
-    B.filter(b => !cmd.has(b.name)).map(block).join("\n"),
+    rest.map(block).join("\n"),
   ].join("\n");
 }
 
