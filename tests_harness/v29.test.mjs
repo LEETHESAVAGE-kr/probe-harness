@@ -106,7 +106,7 @@ test("C7 check_evidence: 만들 것인데 상태 빈 행 → WARN 'n행 — R4 R
 
 test("C7 RUN·ASK: S0 유형 ①~⑤·속도 3줄·12분 상한·모델 이름 없음 / ASK 맨 위 규칙·DM 1·2, 한 메시지에 물음표 2개 이상 0", () => {
   const run = rd("playbook/RUN.md"), ask = rd("playbook/ASK.md");
-  for (const k of ["① 장문", "② 짧은 README", "③ 수치+텍스트", "④ 기존 코드", "⑤ 요구 충돌형", "/fast on", "xhigh 금지", "/fast status", "지시 시간 상한 12분", "15분에 DM 1·2 먼저", "163분이 유일한 고정선"]) assert.ok(run.includes(k), k);
+  for (const k of ["① 장문", "② 짧은 README", "③ 수치+텍스트", "④ 기존 코드", "⑤ 요구 충돌형", "/fast", "xhigh 금지", "토글", "지시 시간 상한 12분", "15분에 DM 1·2 먼저", "163분이 유일한 고정선"]) assert.ok(run.includes(k), k);
   assert.ok(ask.indexOf("한 메시지에 질문 하나") < ask.indexOf("**DM 1") && ask.indexOf("**DM 2") < ask.indexOf("## 질문 운영"));
   assert.deepStrictEqual(ask.split("\n").filter(l => /\?.*\?/.test(l)), []);
   const fence = [...ask.matchAll(/^```\n([\s\S]*?)^```$/gm)].map(m => m[1]).filter(b => (b.match(/\?/g) || []).length > 1);

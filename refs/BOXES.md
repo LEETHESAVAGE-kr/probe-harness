@@ -42,7 +42,7 @@ AGENTS.md를 읽어라(이번 한 번). PLAN·LOG·DECISIONS·VERIFY·README_RUN
 확인: 끝나면 내가 git show --stat의 양식 파일 수와 보고의 규칙 요약 한 줄을 본다
 /status:
 ```
-언제: S0 · 0~8분, A 탭에(/status 출력을 끝에 붙여) — 먼저 창 1·2·4마다 codex → /fast on → /model(창 1 high · 나머지 medium) → /status
+언제: S0 · 0~8분, A 탭에(/status 출력을 끝에 붙여) — 먼저 창 1·2·4마다 codex → /fast → /model(창 1 high · 나머지 medium) → /status
 비울 칸: 선택지 ← /status 승인 모드. `/status:` 뒤에 /status 출력 전체.
 
 ## s1

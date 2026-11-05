@@ -15,13 +15,13 @@
 
 | 창 | 이름 | Codex | 설정(고정) | 치는 명령 | 커밋 | 언제 |
 |---|---|---|---|---|---|---|
-| 1 | 판단 | ○ | high · fast on | 역할 카드 없음 · $algo R★ · $plan · $decide · $defend | ○ (S2·S5·S6에만) | S2, S5~S6 |
-| 2 | A 구현 | ○ | medium · fast on | $role-a로 시작 · $s0 · $s1 · $ask · $feat(묶음) · $debug | ○ (S0·S1·S4에만) | S0~S4 |
-| 3 | A2 구현 | ○ | medium · fast on | $role-a2 | ○ ([A2] 접두, 자기 파일만) | S4 첫 A 커밋 뒤 |
-| 4 | C 문서 | ○ | medium · fast on | $role-c · 100분 $readme | × | S1~S5 |
-| 5 | D 측정 | ○ | medium · fast on | $role-d · $verify · $screen · $prove | × | S3~S5 |
+| 1 | 판단 | ○ | high · fast(priority) | 역할 카드 없음 · $algo R★ · $plan · $decide · $defend | ○ (S2·S5·S6에만) | S2, S5~S6 |
+| 2 | A 구현 | ○ | medium · fast(priority) | $role-a로 시작 · $s0 · $s1 · $ask · $feat(묶음) · $debug | ○ (S0·S1·S4에만) | S0~S4 |
+| 3 | A2 구현 | ○ | medium · fast(priority) | $role-a2 | ○ ([A2] 접두, 자기 파일만) | S4 첫 A 커밋 뒤 |
+| 4 | C 문서 | ○ | medium · fast(priority) | $role-c · 100분 $readme | × | S1~S5 |
+| 5 | D 측정 | ○ | medium · fast(priority) | $role-d · $verify · $screen · $prove | × | S3~S5 |
 | 6 | 터미널 | × (codex 치지 않는다 — `$` 프롬프트에 직접) | — | clone+bootstrap · git status · curl · check_evidence · rm -rf _playbook | — | 전 구간 |
-| 7 | B 리뷰 | ○ | medium · fast on | $role-b · $readme | × | S6만 (새 세션) |
+| 7 | B 리뷰 | ○ | medium · fast(priority) | $role-b · $readme | × | S6만 (새 세션) |
 | 8 | 서버 | × | — | `PORT=3000 node server.js` 하나만(`&` 쓰지 않음, 로그가 이 창에 그대로 보인다. 코드가 바뀌면 Ctrl+C → 같은 명령) | — | S3~ |
 - 규칙 ①: 창 1과 창 2는 같은 시간에 커밋하지 않는다 — S2 끝 PLAN 커밋(창 1) 뒤에 S4 첫 feat(창 2), 163분에 창 2가 멈춘 뒤 창 1이 $decide·$defend. 창 3은 자기 파일만.
 - 규칙 ②: S0 속도 설정 줄.
@@ -41,10 +41,10 @@
    - 내 눈: 출력 "원래 있던 것"에 README·데이터, README_RUN 머리에 작업 틀 출처 줄.
    - 안 되면: clone 실패 → 한 번만 재시도, 그래도 안 되면 에디터에 AGENTS.md 규칙 12줄을 직접 치고 첫 지시 `작업 규칙: README 최우선, push·외부 전송 금지, 0.0.0.0, 요구를 표로 만든 뒤 내 승인 뒤 구현, 단계마다 테스트·커밋, 답은 한 일·검증·왜·다음`.
    - 안 되면: `/tmp`에 못 쓴다 → `.harness`로 받고 `echo ".harness/" >> .git/info/exclude`, 이후 경로 `./.harness`. node가 없다 → `sh /tmp/harness/bootstrap.sh`.
-2. [터미널 +] 창 8개를 열고 탭 이름을 붙인다: `printf '\033]0;2 A 구현\007'`. 에디터에 `_playbook/PROMPTS.md`를 옆에 연다. 첫 파일을 열고 **Alt+Z**.
-3. [창 1·2·4] 탭마다 `codex` → `/fast on` → `/model`(창 1 high · 창 2·4 medium) → `/status`. 창 5(D)는 S3에서, 창 7(B)은 S6에서 같은 순서로 켠다(medium). xhigh 금지, 이후 설정은 만지지 않는다(규칙 ②: S0 속도 설정 줄). 창 6·8은 Codex 없이 내가 직접 친다.
+2. [터미널 +] S0에는 탭 넷만: 6 터미널(첫 탭) · 1 판단 · 2 A 구현 · 4 C 문서. 탭 이름은 그 탭에서 `printf '\033]0;2 A 구현\007'`(숫자·이름만 바꿔). 나머지 탭(5·8은 S3, 3은 S4, 7은 S6)은 처음 쓸 때 연다. 에디터에 `_playbook/PROMPTS.md`를 옆에 연다. 첫 파일을 열고 **Alt+Z**.
+3. [창 1·2·4] 탭마다 `codex` → `/fast` → `/model`(창 1 high · 창 2·4 medium) → `/status`. 창 5(D)는 S3에서, 창 7(B)은 S6에서 같은 순서로 켠다(medium). xhigh 금지, 이후 설정은 만지지 않는다(규칙 ②: S0 속도 설정 줄). 창 6·8은 Codex 없이 내가 직접 친다.
    - 안 되면: 승인 모드가 never가 아니다 → `/quit` → `codex -s workspace-write -a never -c sandbox_workspace_write.network_access=true` → `/status`.
-   - 안 되면: `/fast status`가 꺼져 있다 → `/model`에서 fast가 되는 모델로 바꾼다.
+   - 안 되면: fast가 default로 보인다(`/fast`는 토글 — 한 번 치면 priority=켜짐, 두 번 치면 default=꺼짐; /fast on 이라는 명령은 없다) → `/fast` 한 번 더 → `/status`.
    - 안 되면: bash에 붙였다(`syntax error near unexpected token`·`^[[200~`) → Ctrl+C → `codex` → `›` 뜬 뒤 붙인다. `[1]+ Stopped codex` → `fg`.
 4. [창 2] PROMPTS.md ‘s0’ 블록 + /status 출력을 붙인다.
    - 내 눈: 보고 첫 줄에 "이번 목적:"이 있다. 규칙 요약이 규칙 12줄과 맞다. `/status` 결과가 LOG '도구 설정'에 있다.
@@ -95,7 +95,7 @@
 1. [창 6 — codex 없는 터미널, `$` 프롬프트에 직접] `node /tmp/harness/bootstrap.mjs --scaffold node-v2 --with plan` — 늘 이 한 줄, 부품은 PLAN '뼈대 부품:' 줄에서 읽는다.
    - 내 눈: 출력에 '부품 base+…'와 '껍데기 교체 3개', Dockerfile 첫 줄이 FROM.
    - 안 되면: "'뼈대 부품:' 줄이 비어 있다" → [창 1]에 `PLAN '- 뼈대 부품:' 줄만 auth,store,lock,schema,docker 중에서 채워라, 없으면 없음` → 같은 명령.
-2. [창 5] `codex` → `/fast on` → `/model`(medium) → `/status` → `$role-d` → ‘역할 시작’(첫 일 데이터셋 2벌) — Enter 직후 기다리지 말고 3번. 여기서부터 S5까지 **A·C·D 세 탭이 동시에 돈다**.
+2. [창 5] `codex` → `/fast` → `/model`(medium) → `/status` → `$role-d` → ‘역할 시작’(첫 일 데이터셋 2벌) — Enter 직후 기다리지 말고 3번. 여기서부터 S5까지 **A·C·D 세 탭이 동시에 돈다**.
 3. [창 2] PROMPTS.md ‘s3’ 블록(S1에서 README가 다른 언어·프레임워크를 정했으면 ‘traps’).
    - 안 되면: Codex가 서버를 띄운 채 멈춤 → Ctrl+C → `서버는 내가 띄운다. 너는 curl만`.
 4. [창 8] `PORT=3000 node server.js` → [창 6] `ss -ltnp | grep 3000`(0.0.0.0)·`curl -s localhost:3000/health`(200) → Browser Port 3000 · Path `/`에서 **로그인 1회를 내 눈으로** → [창 2] ‘기록-로그인 화면’.
@@ -118,7 +118,7 @@
      - 안 되면: A2 충돌 복구 → [창 6] `git status` → A2 파일만 `git stash push -- <파일>` → A 커밋 → `git stash pop`. 그래도 꼬이면 A2를 끄고 A 단독.
   4. **100분: [창 4] C에 ‘readme’**. 데이터를 빼·바꾸·합치기 전에 [창 5] D에 ‘전후 기록’.
   5. **거부 기록 과제당 최소 1회**: ‘반응-요구 밖’. `$feat` 보고에 `[거부 기록 0건]`이 보이면 그 결과에서 요구 밖·과설계를 찾아 쓴다(없으면 꾸며 내지 않고 리스크로).
-  6. **120분: 세션 교체 판단** — [창 2] ‘세션 교체-기록’ → [창 2] `/quit` → `codex` → `/fast on` → `/model`(medium) → `/status` → ‘세션 교체-새 탭’.
+  6. **120분: 세션 교체 판단** — [창 2] ‘세션 교체-기록’ → [창 2] `/quit` → `codex` → `/fast` → `/model`(medium) → `/status` → ‘세션 교체-새 탭’.
      - 안 되면: 100분이 넘어 Codex가 S2 결정을 잊는다 → 지금 세션 교체.
 - **② 깊게 1 + `$prove` (120~150분)**: ★1 핵심 계산 한 행만 '깊게' — 지표 1 + 규칙 1. 동시에 D에 PROMPTS.md ‘prove’ 블록(35분 안에 안 끝나면 현행 vs 우리 안 두 줄로).
 - **③ 마무리 (140~150분)**: HOW_TO_RUN 6항목(C가 채운 것을 A가 확인) · 데이터셋 2벌(D) · 두 번째 중간 보고 DM(ASK.md ②′).
@@ -138,7 +138,7 @@
 ## S6 리뷰·설명 준비·제출 (163~172분) — A + B + C
 - 강제 이동: 172분이면 고치던 것을 멈추고 마감 커밋 → 8분 읽기 → 제출.
 - 치는 것: 아래 1→5 순서대로(붙이는 글은 PROMPTS.md ‘readme’·‘defend’·‘반영’·‘마감’).
-1. [창 7] 새 `codex` → `/fast on` → `/model`(medium) → `/status` → `$role-b` → ‘readme’ — Enter 직후 기다리지 말고 2번.
+1. [창 7] 새 `codex` → `/fast` → `/model`(medium) → `/status` → `$role-b` → ‘readme’ — Enter 직후 기다리지 말고 2번.
 2. [창 1] ‘defend’(B와 동시에 돈다) → 끝 질문에 AI_COLLABORATION을 Q1-A Q2-B Q3-A로 고른다. B 결과가 오면 고칠 것만 [창 2]에 ‘반영’.
 3. [창 6] `node /tmp/harness/scripts/check_evidence.mjs` — "제출 가능"까지 FAIL만 고친다.
    - 안 되면: FAIL 양식 그대로 → `그 문서의 빈 칸을 LOG·out/ 근거로만 채워라, 근거 없으면 "미확인"` / git 상태 → `커밋 안 된 파일 목록을 보여 줘라`.

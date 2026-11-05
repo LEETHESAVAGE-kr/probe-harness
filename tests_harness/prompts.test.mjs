@@ -18,7 +18,7 @@ const ONE_LINERS = ["기록-요구표", "기록-담당자 답", "기록-합의",
 /** 입력: PROMPTS 본문 / 출력: {이름: [{when, body, after}]} */
 const byName = s => {
   const o = {};
-  for (const m of s.matchAll(/^### (.+)\n언제: (.+)\n```\n([\s\S]*?)\n```\n(.*)$/gm)) (o[m[1]] ??= []).push({ when: m[2], body: m[3], after: m[4] });
+  for (const m of s.matchAll(/^### (.+)\n언제: (.+)\n바꿀 곳[^\n]*\n```\n([\s\S]*?)\n```\n(.*)$/gm)) (o[m[1]] ??= []).push({ when: m[2], body: m[3], after: m[4] });
   return o;
 };
 
@@ -41,13 +41,16 @@ test("v2.8-7 블록 수: 명령 16개(s0·s1·ask·algo·plan·s3·feat·role-a2
   assert.strictEqual(Object.values(B).flat().length, parseBoxes(BOXES).length);
 });
 
-test("v2.8-7 명령 블록 모양: 첫 줄 $이름, 둘째 줄 = BOXES 상자 본문 전문(한 줄), 그 아래 목적·범위·내 판단·확인 4줄, 빈칸 ≤3", () => {
+test("v2.9.7 명령 블록 모양: 첫 줄 $이름, 펼친 본문 줄들(공백으로 이으면 BOXES 상자 본문 전문), 빈 줄, 목적·범위·내 판단·확인 4줄, 빈칸 ≤3, 머리에 '바꿀 곳' 줄", () => {
   const B = byName(PROMPTS), bad = [];
   for (const n of PROMPT_CMDS) {
-    const L = B[n][0].body.split("\n"), box = BOXES.split(/^## /m).find(b => b.startsWith(`${n}\n`));
+    const all = B[n][0].body.split("\n"), box = BOXES.split(/^## /m).find(b => b.startsWith(`${n}\n`));
     const body = box.match(/^```\n([^\n]*)\n```$/m)[1];
+    const at = all.findIndex(l => l.startsWith("목적:")), L = [all[0], all.slice(1, at).filter(Boolean).join(" "), ...all.slice(at)];
+    if (at < 3 || all[at - 1] !== "") bad.push(`${n}: 본문 뒤 빈 줄 없음`);
+    if (!PROMPTS.split(`\n### ${n}\n`)[1]?.split("\n")[1]?.match(/^바꿀 곳( \d+곳: |: 없음)/)) bad.push(`${n}: 머리에 '바꿀 곳' 줄 없음`);
     if (L[0] !== `$${n}`) bad.push(`${n}: 첫 줄 ${L[0]}`);
-    if (L[1] !== body) bad.push(`${n}: 둘째 줄이 BOXES 상자 본문과 다르다`);
+    if (L[1] !== body) bad.push(`${n}: 펼친 본문을 이은 것이 BOXES 상자 본문과 다르다`);
     ["목적:", "범위:", "내 판단:", "확인:"].forEach((k, i) => { if (!L[2 + i]?.startsWith(k)) bad.push(`${n}: ${3 + i}째 줄이 '${k}'로 시작하지 않음`); });
     if (/<[^<>\n]+>/.test(L[1])) bad.push(`${n}: 상자 본문에 사람 빈칸 <…> — Codex가 채울 자리는 {…}`);
     const holes = (B[n][0].body.match(/<[^<>\n]+>/g) || []).length;

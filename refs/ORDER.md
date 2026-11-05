@@ -12,28 +12,18 @@
    ↳ 안 되면(clone 실패): [창 6] 같은 명령 한 번만 → 또 실패면 [에디터] AGENTS.md 규칙 12줄 직접 타이핑 → [창 2] 첫 지시 `작업 규칙: README 최우선, push·외부 전송 금지, 0.0.0.0, 요구를 표로 만든 뒤 내 승인 뒤 구현, 단계마다 테스트·커밋, 답은 한 일·검증·왜·다음`
    ↳ 안 되면(`/tmp`에 못 쓴다): [창 6] `git clone --depth 1 https://github.com/LEETHESAVAGE-kr/probe-harness .harness && node .harness/bootstrap.mjs` → `echo ".harness/" >> .git/info/exclude` (이후 경로 `./.harness`)
    ↳ 안 되면(node가 없다): [창 6] `sh /tmp/harness/bootstrap.sh`
-2. [화면] 터미널 + 로 탭 7개를 더 연다
-3. [창 1] `printf '\033]0;1 판단\007'`
-4. [창 2] `printf '\033]0;2 A 구현\007'`
-5. [창 3] `printf '\033]0;3 A2 구현\007'`
-6. [창 4] `printf '\033]0;4 C 문서\007'`
-7. [창 5] `printf '\033]0;5 D 측정\007'`
-8. [창 6] `printf '\033]0;6 터미널\007'`
-9. [창 7] `printf '\033]0;7 B 리뷰\007'`
-10. [창 8] `printf '\033]0;8 서버\007'`
-11. [에디터] `_playbook/PROMPTS.md`를 옆에 연다 → 첫 파일을 열고 Alt+Z
-12. [창 1] `codex` → `/fast on` → `/model`(high) → `/status`
+2. [화면] 터미널 + 로 탭 3개를 더 연다 — S0에는 넷이면 된다: 6 터미널(지금 이 탭) · 1 판단 · 2 A 구현 · 4 C 문서. 탭 이름은 그 탭에서 `printf '\033]0;2 A 구현\007'`(숫자·이름만 바꿔). 나머지는 처음 쓰는 단계에서 연다 — S3: 5 D 측정 · 8 서버 / S4: 3 A2 구현 / S6: 7 B 리뷰
+3. [에디터] `_playbook/PROMPTS.md`를 옆에 연다 → 첫 파일을 열고 Alt+Z
+4. [창 1] `codex` → `/fast` → `/model`(high) → `/status` — 창 2와 창 4도 똑같이 네 개(/model만 medium)
    ↳ 안 되면(승인 모드가 never가 아니다): [그 창] `/quit` → `codex -s workspace-write -a never -c sandbox_workspace_write.network_access=true` → `/status`
-   ↳ 안 되면(`/fast status`가 꺼져 있다): [그 창] `/model`에서 fast가 되는 모델로
-   ↳ 안 되면(명령을 bash에 붙였다): [그 창] Ctrl+C → `codex` → `›` 뜬 뒤 붙인다
+   ↳ 안 되면(fast가 default로 보인다 — 한 번 치면 priority=켜짐, 두 번 치면 default=꺼짐인 토글): [그 창] `/fast` 한 번 더 → `/status`
+   ↳ 안 되면(명령을 bash에 붙였다 — 붙인 글 앞에 [200~ 같은 글자·syntax error): [그 창] Ctrl+C → `codex` → `›` 뜬 뒤 붙인다
    ↳ 안 되면(`[1]+ Stopped codex`): [그 창] `fg` · `>`에서 멈췄으면 Ctrl+C
-13. [창 2] `codex` → `/fast on` → `/model`(medium) → `/status`
-14. [창 4] `codex` → `/fast on` → `/model`(medium) → `/status`
-15. [창 2] `$role-a` → 블록 ‘s0’ + `/status` 출력
+5. [창 2] `$role-a` → 블록 ‘s0’ + `/status` 출력
    ↳ 안 되면("이번 목적:"이 없다): 이후 `$명령`은 같은 이름 블록으로(없으면 `/tmp/harness/refs/BOXES.md` 상자), `$role-a~d`는 블록 ‘역할 카드’
-16. [창 6] `git log --oneline`
+6. [창 6] `git log --oneline`
    ↳ 안 되면([S 0/6]이 없다): 이후 커밋은 [창 6] `git add -A && git commit -m "[S n/6] …"` · [창 2] `커밋은 내가 한다, 너는 git add 목록만`
-17. [창 6] `ls -R data` → `wc -l README.md` → `ls -d src`
+7. [창 6] `ls -R data` → `wc -l README.md` → `ls -d src`
 
 ## S1 요구·껍데기 (8~30분)
 1. [창 2] 블록 ‘s1’(장문이면 범위 줄에 `장문`)
@@ -62,10 +52,10 @@
 ## S3 뼈대·로그인 눈 확인 (48~55분)
 1. [창 6] `node /tmp/harness/bootstrap.mjs --scaffold node-v2 --with plan`
    ↳ 안 되면('뼈대 부품:' 줄이 비어 있다): [창 1] `PLAN '- 뼈대 부품:' 줄만 auth,store,lock,schema,docker 중에서 채워라, 없으면 없음` → 1번 다시
-2. [창 5] `codex` → `/fast on` → `/model`(medium) → `/status` → `$role-d` → 블록 ‘역할 시작’
+2. [창 5] 새 탭(이름 5 D 측정) → `codex` → `/fast` → `/model`(medium) → `/status` → `$role-d` → 블록 ‘역할 시작’
 3. [창 2] 블록 ‘s3’(S1에서 README가 언어·프레임워크를 정했으면 블록 ‘traps’)
    ↳ 안 되면(Codex가 서버를 띄운 채 멈춤): [창 2] Ctrl+C → `서버는 내가 띄운다. 너는 curl만`
-4. [창 8] `PORT=3000 node server.js`
+4. [창 8] 새 탭(이름 8 서버) → `PORT=3000 node server.js`
    ↳ 안 되면(포트 3000 사용 중): [창 8] Ctrl+C → 같은 명령 → 또 막히면 `PORT=3001 node server.js` (Browser Port·HOW_TO_RUN·screen 포트도 3001)
 5. [창 6] `ss -ltnp | grep 3000` → `curl -s localhost:3000/health`
 6. [Browser] Port `3000` · Path `/` → HOW_TO_RUN 데모 계정으로 로그인 1회
@@ -84,12 +74,12 @@
 4. [창 2] 블록 ‘첫 기능 커밋’(첫 기능 커밋 때만)
 5. [DM] `말씀해 주신 것 중 두 가지를 먼저 동작하게 만들었습니다. 1) ○○까지는 지금 바로 보실 수 있습니다. 2) 말씀하신 "△△" 표현을 그대로 기준으로 쓰고 있습니다. 남은 시간에는 ××를 다듬을 예정입니다. 지금 방향에서 바꾸고 싶은 게 있으실까요?` (첫 기능이 끝까지 돈 직후, ~75분)
 6. [창 2] 다음 행 블록 ‘feat’(범위 칸 `얇게`, 같은 모듈 2~3행은 범위 칸 맨 앞에 `묶음: R3 R4 R5`) → 3번 → 만들 것 행이 끝날 때까지 반복
-7. [창 3] `codex` → `/fast on` → `/model`(medium) → `/status` → 블록 ‘role-a2’(첫 A 커밋 뒤·분할표가 있을 때, 행 ≤8이거나 모듈 경계가 없으면 안 켠다)
+7. [창 3] 새 탭(이름 3 A2 구현) → `codex` → `/fast` → `/model`(medium) → `/status` → 블록 ‘role-a2’(첫 A 커밋 뒤·분할표가 있을 때, 행 ≤8이거나 모듈 경계가 없으면 안 켠다)
    ↳ 안 되면(A2 충돌): [창 6] `git status` → `git stash push -- <파일>` → A 커밋 → `git stash pop`
 8. [창 4] 블록 ‘readme’(100분)
 9. [창 5] 블록 ‘전후 기록’(데이터를 빼·바꾸·합치기 전에)
 10. [창 2] 블록 ‘반응-요구 밖’(과제당 최소 1회, 보고에 `[거부 기록 0건]`이 보이면 그 결과에서 찾아)
-11. [창 2] 블록 ‘세션 교체-기록’(120분) → [창 2] `/quit` → `codex` → `/fast on` → `/model`(medium) → `/status` → 블록 ‘세션 교체-새 탭’
+11. [창 2] 블록 ‘세션 교체-기록’(120분) → [창 2] `/quit` → `codex` → `/fast` → `/model`(medium) → `/status` → 블록 ‘세션 교체-새 탭’
    ↳ 안 되면(Codex가 S2 결정을 잊는다): 지금 11번
 
 ## S4 기능 2패스 깊게 1 (120~150분)
@@ -107,7 +97,7 @@
 4. [창 1] 블록 ‘decide’ → 표가 오면 `D1-A② D2-B① 거부-A③ 고정 절 맞다`처럼 번호로만
 
 ## S6 리뷰·설명 준비·제출 (163~172분)
-1. [창 7] 새 `codex` → `/fast on` → `/model`(medium) → `/status` → `$role-b` → 블록 ‘readme’
+1. [창 7] 새 탭(이름 7 B 리뷰) → `codex` → `/fast` → `/model`(medium) → `/status` → `$role-b` → 블록 ‘readme’
 2. [창 1] 블록 ‘defend’(Enter 직후, B와 동시에)
 3. [창 1] 끝 질문에 `Q1-A Q2-B Q3-A`처럼
 4. [창 2] 블록 ‘반영’(B 결과가 오면, 고칠 것만)

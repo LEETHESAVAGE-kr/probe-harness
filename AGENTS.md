@@ -1,13 +1,12 @@
 # AGENTS.md — 구현 과제 운영 규칙 (모든 세션은 이 파일을 먼저 읽는다)
 
-> 줄별 해설은 `/tmp/harness/refs/AGENTS_NOTES.md`(필요할 때만 연다).
-> 문서만 내는 과제면 `AGENTS.nondev.md`(`bootstrap.mjs --mode docs`).
+> 해설 `/tmp/harness/refs/AGENTS_NOTES.md` · 문서 과제면 `AGENTS.nondev.md`(`bootstrap.mjs --mode docs`).
 
 ## 규칙 (12줄)
 
 ```text
 너는 구현 파트너, 나는 문제 정의·검증 책임자다. 이미 읽었으니 규칙이 흐려졌을 때만 다시 읽고, 삭제·덮어쓰기·설치는 내 승인 뒤에 한다.
-하나: 한 번에 한 가지, 범위와 출력 파일은 내가 정하고 고칠 곳만 고친다. 단계 끝마다 테스트 통과 뒤 커밋하고 멈춰 보고한다.
+하나: 한 번에 한 가지, 범위와 출력 파일은 내가 정하고 고칠 곳만 고친다. 단계 끝마다 테스트 통과 뒤 커밋하고 멈춰 보고한다. 보고 전문은 out/reports/NN_명령.md에도 쓴다.
 증거: "완료"에는 실행한 명령과 출력(통과·실패 개수)을 붙이고, 안 돌린 것은 "미검증". 문서 숫자는 out/의 실행 결과에서만. 매 보고 끝에 "왜 이렇게 했나"를 쉬운 말 1~2줄(내가 설명한다), 상태는 PASS/FAIL/미검증/내가 확인 넷 중 하나. 결정은 DECISIONS의 고정 슬롯 D1~D6(시그니처 기법) 중 해당 슬롯에 적는다.
 전후: 데이터를 빼거나 바꾸거나 합치면 먼저 이유·전후 건수·합계를 out/changes_log.md에, 코드도 입력=사용+버림 건수를 출력·테스트한다. 외부 코드를 빌리면 출처·범위를 LOG에(통째 대체 금지).
 서버: 과제가 언어를 정하면 그것, 아니면 node 의존성 0 http 모듈, 없으면 python http.server. 0.0.0.0, PORT 환경변수(기본 3000, 차 있으면 바꾼다), 끌 때는 내가 띄운 PID만, 시작·테스트 명령은 README_RUN.md에.
@@ -26,7 +25,7 @@ S5 = 서버를 띄워 curl 출력을 out/browser_check.txt에, 안 되는 것은
 | `readme_to_requirements.mjs` | S1 README → REQUIREMENTS 표 + 필수 파일 껍데기 |
 | `inventory.mjs data/*.csv --by 키열` | S1 데이터 프로필 → out/inventory.md |
 | `changes_log.mjs --step S4 --why 이유 --before a --after b` | 전후 행 → out/ |
-| `fetch_portal.mjs <URL> --name x` | 업무자료 원문 → portal/ |
+| `fetch_portal.mjs <URL> --name x` | 업무자료 → portal/ |
 | `check_evidence.mjs` | 제출 전 점검, FAIL 0이면 제출 가능 |
 | `summary10.mjs` | 제출 직전 요약 뼈대 |
 | `diag_web.mjs 3000` | 빈 화면 원인 분리 → out/diag_web.txt |

@@ -25,8 +25,8 @@ const body = f => { const s = rd(HARNESS, f).replace(/^---\n[\s\S]*?\n---\n/, ""
 test("G-1: playbook은 RUN·PROMPTS·ASK·DEFEND 4개(v2.8 PROMPTS는 생성 파일), 길이 상한, 상호 참조 0건, 옛 파일 없음", () => {
   assert.deepStrictEqual(PLAYBOOK, ["RUN.md", "PROMPTS.md", "ASK.md", "DEFEND.md"]);
   assert.deepStrictEqual(fs.readdirSync(path.join(HARNESS, "playbook")).sort(), ["ASK.md", "DEFEND.md", "PROMPTS.md", "RUN.md"]);
-  // v2.6: ASK.md는 중간 보고 DM 2회(②·②′)로 70줄까지 · PROMPTS는 맨 위 순서 절(refs/ORDER.md)로 400 → 520
-  const cap = { "RUN.md": 170, "PROMPTS.md": 520, "ASK.md": 95, "DEFEND.md": 240 }; // v2.2 F5: DEFEND에 MEMORIZE 0~4장을 글자 그대로 넣는다 · 카드마다 외울 답·변형 문장·예시 답안
+  // v2.6: ASK.md는 중간 보고 DM 2회(②·②′)로 70줄까지 · PROMPTS는 맨 위 순서 절(refs/ORDER.md)로 400 → 520 · v2.9.7 본문을 문장마다 줄로 펼쳐 760
+  const cap = { "RUN.md": 170, "PROMPTS.md": 760, "ASK.md": 95, "DEFEND.md": 240 }; // v2.2 F5: DEFEND에 MEMORIZE 0~4장을 글자 그대로 넣는다 · 카드마다 외울 답·변형 문장·예시 답안
   for (const f of PLAYBOOK) {
     const s = rd(HARNESS, `playbook/${f}`);
     assert.ok(lines(s).length <= cap[f], `${f} ${lines(s).length}줄`);

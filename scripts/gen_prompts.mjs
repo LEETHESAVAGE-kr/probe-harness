@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // gen_prompts.mjs — refs/ORDER.md(맨 위 순서 절)와 refs/BOXES.md(상자 본문 · 지시 4줄 · 언제 · 비울 칸 · 한 줄 지시)에서 playbook/PROMPTS.md를 만든다. PROMPTS.md는 손으로 고치지 않는다
 // 사용: (하네스 폴더에서) node scripts/gen_prompts.mjs [--check]   --check는 다시 만든 결과와 커밋된 파일을 바이트로 대조만. 종료 코드: 0 같음 · 1 다름
+// v2.9.7 읽기 꼴: 상자 본문(BOXES에서는 한 줄)을 문장마다 한 줄로 펼쳐 쓴다(펼친 줄을 공백으로 이으면 원문과 같다) · 블록 머리에 '바꿀 곳' 줄(사람이 고칠 <…> 칸의 위치와 할 일) · 붙여 넣기 증상 안내
 // SPDX-License-Identifier: MIT
 import fs from "node:fs";
 import path from "node:path";
@@ -11,9 +12,29 @@ const HARNESS = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 // PROMPTS.md에 블록을 두는 명령(이 순서로). s3·traps는 skill이 없는 상자다
 export const PROMPT_CMDS = ["s0", "s1", "ask", "algo", "plan", "s3", "feat", "role-a2", "prove", "verify", "readme", "decide", "defend", "debug", "screen", "traps"];
 export const ORDER_HEAD = "## 순서 — 위에서 아래로 친다";
+export const HOLES_HEAD = "바꿀 곳";
 
 const fences = s => [...s.matchAll(/^```[^\n]*\n([\s\S]*?)^```$/gm)].map(m => m[1].replace(/\n$/, ""));
 const field = (s, k) => (s.match(new RegExp(`^${k}: (.*)$`, "m")) || [])[1] || "";
+
+/** 입력: 상자 본문 한 줄 / 출력: 읽기용 줄 배열 — 문장 끝(". ")과 번호 표(" ①"~" ⑨") 앞에서 나눈다. 줄을 공백 하나로 이으면 원문과 같다(되돌릴 수 있다) / 깨지는 조건: 되돌린 결과가 원문과 다르면 Error */
+export function displayLines(body) {
+  const lines = body.split(". ").flatMap((s, i, a) => (i < a.length - 1 ? `${s}.` : s).split(/ (?=[①-⑨])/));
+  if (lines.join(" ") !== body) throw new Error("본문을 줄로 펼친 뒤 되돌리면 원문과 다르다");
+  return lines;
+}
+
+/** 입력: 블록 본문(여러 줄) / 출력: '바꿀 곳' 한 줄 — <…> 칸마다 ①② 번호 · 어느 줄인지 · 할 일(선택지면 "하나만 남긴다", 아니면 "채운다") / 깨지는 조건: 없음(칸이 없으면 "없음 — 그대로 붙인다") */
+export function holesLine(body) {
+  const L = body.split("\n"), found = [];
+  L.forEach((l, i) => {
+    const where = /^(목적|범위|내 판단|확인|증상):/.exec(l)?.[1] || (i === 0 && !/^\$/.test(l) ? "본문" : i === 0 ? null : "본문");
+    for (const m of l.matchAll(/<[^<>\n]+>/g)) found.push({ where: where || "본문", hole: m[0] });
+  });
+  if (!found.length) return `${HOLES_HEAD}: 없음 — 그대로 붙인다`;
+  const num = "①②③④⑤⑥⑦⑧⑨";
+  return `${HOLES_HEAD} ${found.length}곳: ` + found.map((f, i) => `${num[i]} ${f.where} 줄 ${f.hole} → ${/\//.test(f.hole) && !/…/.test(f.hole) ? "하나만 남긴다" : "채운다"}`).join(" · ");
+}
 
 /** 입력: BOXES 본문 / 출력: [{name, when, body, holes}] — 명령 블록 뒤에 한 줄 지시 블록 / 깨지는 조건: 상자·지시·언제가 빠진 명령이 있으면 Error */
 export function parseBoxes(text) {
@@ -25,7 +46,7 @@ export function parseBoxes(text) {
     const [body] = fences(b), lines = b.includes("\n지시:\n") ? fences(b.split("\n지시:\n")[1])[0] : "";
     if (!body || body.includes("\n")) throw new Error(`${n}: 상자 본문은 한 줄`);
     if (!lines || !field(b, "언제")) throw new Error(`${n}: '지시:' 4줄 또는 '언제:' 없음`);
-    out.push({ name: n, when: field(b, "언제"), body: `$${n}\n${body}\n${lines}`, holes: field(b, "비울 칸") });
+    out.push({ name: n, when: field(b, "언제"), body: `$${n}\n${displayLines(body).join("\n")}\n\n${lines}`, holes: field(b, "비울 칸") });
   }
   const reactions = (fences(sec("prompt") || "")[1] || "").split("\n").filter(Boolean);
   for (const e of (sec("한 줄 지시") || "").split(/^### /m).slice(1)) {
@@ -73,7 +94,7 @@ export function orderSection(orderText, names) {
 /** 입력: BOXES 본문, RUN 본문(기본: playbook/RUN.md), ORDER 본문(기본: refs/ORDER.md) / 출력: PROMPTS.md 본문(LF) — 맨 위 순서 절, 그 아래 RUN 시간 순서대로 단계별 블록, RUN 단계에서 안 불리는 블록은 끝 '아무 때나' / 깨지는 조건: parseBoxes·orderSection과 같다 */
 export function generate(text, runText = fs.readFileSync(path.join(HARNESS, "playbook/RUN.md"), "utf8"), orderText = fs.readFileSync(path.join(HARNESS, "refs/ORDER.md"), "utf8")) {
   const B = parseBoxes(text), by = new Map(B.map(b => [b.name, b])), used = new Set();
-  const block = b => `### ${b.name}\n언제: ${b.when}\n\`\`\`\n${b.body}\n\`\`\`\n비울 칸: ${b.holes || "없음"}\n`;
+  const block = b => `### ${b.name}\n언제: ${b.when}\n${holesLine(b.body)}\n\`\`\`\n${b.body}\n\`\`\`\n비울 칸: ${b.holes || "없음"}\n`;
   const parts = [];
   for (const st of runOrder(runText)) {
     const own = st.names.filter(n => by.has(n) && !used.has(n));
@@ -89,9 +110,11 @@ export function generate(text, runText = fs.readFileSync(path.join(HARNESS, "pla
     "",
     "# 블록 — 위 순서에서 이름으로 부른다",
     "",
-    "> 블록을 통째로 복사해 Codex 입력칸(`›`)에 붙이고 `<…>` 칸만 바꾼다(선택지 `<가/나>`는 하나만 남긴다) — `$` 인식 여부와 무관, 첫 줄 `$이름`은 있어도 그만. `{…}`는 Codex가 채운다.",
+    "> 읽는 법 — 블록마다 세 줄이 머리다: `언제:`(어느 단계·어느 창) → `바꿀 곳:`(내가 고칠 `<…>` 칸이 어느 줄에 몇 개, 선택지는 하나만 남긴다·빈칸은 채운다) → ``` 사이가 복사할 전부. 그 아래 `비울 칸:`은 그 칸에 넣을 값을 어디서 가져오는지.",
+    "> 붙이는 법 — ``` 사이를 통째로 복사해 Codex 입력칸(`›`)에 붙이고 `바꿀 곳`의 `<…>` 칸만 고친 뒤 Enter. 첫 줄 `$이름`은 있어도 그만($ 인식 여부와 무관). `{…}`는 Codex가 채우니 두고, 본문이 여러 줄인 것은 읽기 쉽게 펼친 것이라 그대로 붙인다.",
+    "> 붙였더니 이상하다 — 앞에 `[200~`·`^[[200~` 같은 글자가 붙고 `syntax error`가 나면 Codex가 아니라 bash에 붙인 것: Ctrl+C → `codex` → `›`가 뜬 뒤 다시 붙인다. Codex 입력칸에서 긴 붙여넣기가 `[Pasted Content … chars]`처럼 접혀 보이는 것은 정상 — 그대로 Enter.",
     "> 생성 파일 — 손으로 고치지 마라. 원본은 하네스 `refs/BOXES.md`·`refs/ORDER.md`, 다시 만들기: `node scripts/gen_prompts.mjs`. 하네스가 `./.harness`에 있으면 `/tmp/harness`를 `./.harness`로 읽는다.",
-    "> 순서는 `RUN.md`와 같다 — 단계(S0~S6)마다 RUN의 번호 단계에서 처음 부르는 순서대로 놓았다. 위에서 아래로 내려가며 붙이면 된다.",
+    "> 순서는 `RUN.md`와 같다 — 단계(S0~S6)마다 RUN의 번호 단계에서 처음 부르는 순서대로 놓았다. 위에서 아래로 내려가며 붙이면 된다. Codex 보고는 화면과 같은 전문이 `out/reports/NN_명령.md`에도 남는다(AGENTS 규칙) — 화면이 지나갔으면 에디터로 그 파일을 연다.",
     "",
     ...parts,
     "## 아무 때나 — 반응·예비 (RUN 단계 번호에 없는 블록)",
