@@ -201,7 +201,7 @@ if (isMain) {
     fs.mkdirSync(path.join(o.target, "out"), { recursive: true });
     fs.writeFileSync(path.join(o.target, "out/env.txt"), env.join("\n") + "\n"); // env.txt만은 매번 새로 쓴다(환경 기록)
     console.log("환경(out/env.txt — LOG '도구 설정'에 붙인다):"); env.forEach(l => console.log("  " + l));
-    console.log("다음: 파일 목록에서 _playbook/RUN.md 열기 → 탭 이름 붙이기 → codex → /status → $s0");
+    console.log("다음: 파일 목록에서 _playbook/PROMPTS.md 열기(막히면 RUN.md) → 탭 이름 붙이기 → codex → /status → $s0");
   } catch (e) {
     console.error(`[bootstrap] 실패: ${e.message}`);
     process.exit(2);

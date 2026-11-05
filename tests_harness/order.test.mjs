@@ -19,8 +19,6 @@ const BLOCKS = new Set(parseBoxes(BOXES).map(b => b.name));
 const NOT_INPUT = new Set(["$", "- 뼈대 부품:"]);
 // '안 되면' 줄의 증상 인용(내가 치지 않는다)
 const SYMPTOM = new Set(["syntax error near unexpected token", "^[[200~", "EADDRINUSE", "PORT=3001", "$s1", "$s0"]);
-// RUN은 한 줄에 몰아 썼고 실제로는 뒤에 치는 것 — [이 이름, 이 입력 뒤로]
-const MOVED = [["첫 기능 커밋", "1A 2B 3A 4B"], ["반영", "defend"]];
 // 코드 따옴표 밖이거나 내 눈 줄에 있지만 내가 치는 답
 const ANSWERS = ["1A 2B 3A 4B", "Q1-A Q2-B Q3-A", "후보 n", "1A 2B", "R25 만들 R26 뺄", "맞다", "D1-A② D2-B① 거부-A③ 고정 절 맞다", "가", "나"];
 
@@ -36,10 +34,6 @@ export function runTokens(text) {
     for (const l of st.split("\n").slice(1)) {
       if (/^\s*(\d+\.|- \*\*|- 제출:)/.test(l)) main.push(...tokens(l).filter(isInput));
       else if (/^\s*- 안 되면:/.test(l)) tail.push(...tokens(l).filter(isInput));
-    }
-    for (const [name, after] of MOVED) {
-      const i = main.indexOf(name), j = main.indexOf(after);
-      if (i >= 0 && j > i) main.splice(j, 0, main.splice(i, 1)[0]);
     }
     out[key] = { main, tail };
   }

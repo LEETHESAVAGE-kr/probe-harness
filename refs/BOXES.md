@@ -340,7 +340,7 @@ C·D 가운데 C의 커밋 준비됨 목록(handoff.mjs)도 함께, D 목록이 
 ```
 
 ### 세션 교체-새 탭
-언제: S4 · 120분, 창 3 새 codex에
+언제: S4 · 120분, 창 2에서 /quit 뒤 새 codex에
 ```
 AGENTS.md → PLAN → REQUIREMENTS → LOG 순으로 읽고 지금 단계·다음 R번호·미검증을 5줄로 보고하고 멈춰라
 ```
