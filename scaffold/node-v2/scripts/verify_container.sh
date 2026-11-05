@@ -16,6 +16,10 @@ if ! command -v "$DOCKER" >/dev/null 2>&1; then
   log "SKIP: docker 없음 — 이 환경에서는 컨테이너를 확인하지 못했다(성공 아님)"
   exit 3
 fi
+if ! "$DOCKER" info >/dev/null 2>&1; then
+  log "SKIP: docker 데몬에 연결 못 함 — 이 환경에서는 컨테이너를 확인하지 못했다(성공 아님)"
+  exit 3
+fi
 if ! "$DOCKER" build -t "$TAG" . > "$BUILDLOG" 2>&1; then
   tail -20 "$BUILDLOG" | tee -a "$OUT"
   log "FAIL: docker build"

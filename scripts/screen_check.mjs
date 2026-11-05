@@ -55,7 +55,7 @@ const get = (base, p) => new Promise(ok => {
 
 async function loadPlaywright(dir) {
   for (const base of [path.join(dir, "_.js"), import.meta.url]) {
-    try { return await import(pathToFileURL(createRequire(base).resolve("playwright")).href); } catch { /* 없음 */ }
+    try { const m = await import(pathToFileURL(createRequire(base).resolve("playwright")).href); return m.chromium ? m : m.default; } catch { /* 없음 */ }
   }
   return null;
 }
@@ -65,7 +65,8 @@ export async function screenCheck({ dir, base, accounts, rows, pw }) {
   const accs = accounts.length ? accounts : [{ role: "로그인 없음", user: "", pass: "" }], table = [], checklist = [];
   if (pw) {
     fs.mkdirSync(path.join(dir, "out/screens"), { recursive: true });
-    const browser = await pw.chromium.launch();
+    let browser;
+    try { browser = await pw.chromium.launch(); } catch (e) { console.error(`[screen_check] 브라우저를 못 띄움(${String(e.message).split("\n")[0]}) — http 확인으로 바꾼다`); return screenCheck({ dir, base, accounts, rows, pw: null }); }
     try {
       for (const a of accs) {
         const page = await (await browser.newContext()).newPage(); let errors = 0, failed = false;
@@ -76,7 +77,7 @@ export async function screenCheck({ dir, base, accounts, rows, pw }) {
           await page.locator("input[type=password]").first().fill(a.pass);
           await page.locator("input[type=password]").first().press("Enter");
           await page.waitForLoadState("networkidle").catch(() => {});
-          failed = await page.locator("input[type=password]:visible").count() > 0;
+          failed = !(await page.locator("input[type=password]").first().waitFor({ state: "hidden", timeout: 5000 }).then(() => true, () => false));
         }
         for (const r of rows) {
           const shot = `out/screens/${a.role}_${r.id}.png`.replace(/[^\w./가-힣-]/g, "_");

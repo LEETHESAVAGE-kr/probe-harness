@@ -25,7 +25,7 @@ S5 = 서버를 띄워 curl 출력을 out/browser_check.txt에, 안 되는 것은
 |---|---|
 | `readme_to_requirements.mjs` | S1 README → REQUIREMENTS 표 + 필수 파일 껍데기 |
 | `inventory.mjs data/*.csv --by 키열` | S1 데이터 프로필 → out/inventory.md |
-| `changes_log.mjs --before a --after b` | 전후 비교 행 → out/changes_log.md |
+| `changes_log.mjs --step S4 --why 이유 --before a --after b` | 전후 행 → out/ |
 | `fetch_portal.mjs <URL> --name x` | 업무자료 원문 → portal/ |
 | `check_evidence.mjs` | 제출 전 점검, FAIL 0이면 제출 가능 |
 | `summary10.mjs` | 제출 직전 요약 뼈대 |

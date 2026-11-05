@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## v2.9.3 — 최종 점검 수정
+
+| 결함(일반) | 변경 | 검증 |
+|---|---|---|
+| playwright가 있는 환경에서 `screen_check.mjs`가 `pw.chromium` undefined로 죽는다(CJS 모듈을 import하면 default 안에 있다) | `m.chromium ? m : m.default`, 브라우저 실행 실패 시 http 폴백 | 실제 chromium으로 성공·비밀번호 오류·브라우저 없음 3경우 |
+| 로그인 응답 전에 판정해 맞는 계정도 "로그인 실패" | 비밀번호 칸이 사라질 때까지 최대 5초 대기 | 같은 3경우 |
+| AGENTS 도구 표의 `changes_log.mjs --before a --after b`는 필수 `--step`·`--why`가 빠져 첫 실행이 실패 | 표에 `--step S4 --why 이유` | agents_size 6KB 시험 통과 |
+| docker CLI만 있고 데몬이 없으면 verify_container가 FAIL(실패로 기록) | `docker info` 실패면 SKIP(종료 3) | 데몬 없는 환경에서 SKIP 확인 |
+
 ## v2.9.2 — RUN 시간 순서 · 부품 자동 · 답 붙여넣기
 
 | 결함(일반) | 변경 | 검증 |
