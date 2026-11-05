@@ -21,7 +21,7 @@ export function isShell(text) {
   return body.length === 1 && sig(body[0].replace(/^[#>\s]+/, ""));
 }
 const readIfFile = f => { try { return fs.statSync(f).isFile() ? fs.readFileSync(f, "utf8") : ""; } catch { return ""; } };
-// 사람이 읽는 것 4개만(PROMPTS.md는 refs/BOXES.md에서 scripts/gen_prompts.mjs가 만든다) 작업 폴더 _playbook/에 사본(편집기에서 바로 연다, .gitignore로 커밋 제외). refs/는 하네스 폴더에 그대로 둔다.
+// 사람이 읽는 것 4개만(PROMPTS.md는 refs/BOXES.md·ORDER.md에서 scripts/gen_prompts.mjs가 만든다) 작업 폴더 _playbook/에 사본(편집기에서 바로 연다, .gitignore로 커밋 제외). refs/는 하네스 폴더에 그대로 둔다.
 export const PLAYBOOK = ["RUN.md", "PROMPTS.md", "ASK.md", "DEFEND.md"];
 // Codex가 작업 폴더 .agents/skills/에서 찾는 한 단어 명령($s1 등)과 역할 카드($role-a 등)
 export const COMMANDS = ["s0", "s1", "ask", "plan", "feat", "readme", "verify", "defend", "debug", "screen", "prove", "decide", "algo"];

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v2.9.4 — PROMPTS 한 장으로 진행
+
+| 결함(일반) | 변경 | 검증 |
+|---|---|---|
+| 치는 것이 RUN(순서)·PROMPTS(블록)·ASK(DM)에 흩어져 시험 중 세 문서를 오간다 | `refs/ORDER.md`(원본) → `gen_prompts.mjs`가 PROMPTS.md 맨 위에 "순서" 절 생성: S0~S6·제출, `n. [창 n] 입력`, `↳ 안 되면` 줄. 블록 본문은 그대로 아래에 한 번씩. PROMPTS 줄 상한 400 → 520 | tests_harness/order.test.mjs(RUN 번호 줄 대조·결함 재삽입·DM 글자 대조·첫 화면) |
+
 ## v2.9.3 — 최종 점검 수정
 
 | 결함(일반) | 변경 | 검증 |

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// gen_prompts.mjs — refs/BOXES.md(상자 본문 · 지시 4줄 · 언제 · 비울 칸 · 한 줄 지시)에서 playbook/PROMPTS.md를 만든다. PROMPTS.md는 손으로 고치지 않는다
+// gen_prompts.mjs — refs/ORDER.md(맨 위 순서 절)와 refs/BOXES.md(상자 본문 · 지시 4줄 · 언제 · 비울 칸 · 한 줄 지시)에서 playbook/PROMPTS.md를 만든다. PROMPTS.md는 손으로 고치지 않는다
 // 사용: (하네스 폴더에서) node scripts/gen_prompts.mjs [--check]   --check는 다시 만든 결과와 커밋된 파일을 바이트로 대조만. 종료 코드: 0 같음 · 1 다름
 // SPDX-License-Identifier: MIT
 import fs from "node:fs";
@@ -10,6 +10,7 @@ import { isMain } from "./lib.mjs";
 const HARNESS = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 // PROMPTS.md에 블록을 두는 명령(이 순서로). s3·traps는 skill이 없는 상자다
 export const PROMPT_CMDS = ["s0", "s1", "ask", "algo", "plan", "s3", "feat", "role-a2", "prove", "verify", "readme", "decide", "defend", "debug", "screen", "traps"];
+export const ORDER_HEAD = "## 순서 — 위에서 아래로 친다";
 
 const fences = s => [...s.matchAll(/^```[^\n]*\n([\s\S]*?)^```$/gm)].map(m => m[1].replace(/\n$/, ""));
 const field = (s, k) => (s.match(new RegExp(`^${k}: (.*)$`, "m")) || [])[1] || "";
@@ -59,8 +60,18 @@ export function runOrder(runText) {
   }));
 }
 
-/** 입력: BOXES 본문, RUN 본문(기본: playbook/RUN.md) / 출력: PROMPTS.md 본문(LF) — RUN 시간 순서대로 단계별 블록, RUN 단계에서 안 불리는 블록은 끝 '아무 때나' / 깨지는 조건: parseBoxes와 같다 */
-export function generate(text, runText = fs.readFileSync(path.join(HARNESS, "playbook/RUN.md"), "utf8")) {
+/** 입력: ORDER 본문, 블록 이름 Set / 출력: "## 순서" 줄부터 끝까지(LF) / 깨지는 조건: 그 줄이 없거나 없는 블록 이름을 부르면 Error */
+export function orderSection(orderText, names) {
+  const s = orderText.replace(/\r\n/g, "\n"), at = s.indexOf(`${ORDER_HEAD}\n`);
+  if (at < 0) throw new Error(`ORDER에 '${ORDER_HEAD}' 줄 없음`);
+  const body = s.slice(at).trimEnd();
+  const miss = [...new Set([...body.matchAll(/‘([^’]+)’/g)].map(m => m[1]))].filter(n => !names.has(n));
+  if (miss.length) throw new Error(`ORDER가 부른 블록이 BOXES에 없다: ${miss.join(", ")}`);
+  return body;
+}
+
+/** 입력: BOXES 본문, RUN 본문(기본: playbook/RUN.md), ORDER 본문(기본: refs/ORDER.md) / 출력: PROMPTS.md 본문(LF) — 맨 위 순서 절, 그 아래 RUN 시간 순서대로 단계별 블록, RUN 단계에서 안 불리는 블록은 끝 '아무 때나' / 깨지는 조건: parseBoxes·orderSection과 같다 */
+export function generate(text, runText = fs.readFileSync(path.join(HARNESS, "playbook/RUN.md"), "utf8"), orderText = fs.readFileSync(path.join(HARNESS, "refs/ORDER.md"), "utf8")) {
   const B = parseBoxes(text), by = new Map(B.map(b => [b.name, b])), used = new Set();
   const block = b => `### ${b.name}\n언제: ${b.when}\n\`\`\`\n${b.body}\n\`\`\`\n비울 칸: ${b.holes || "없음"}\n`;
   const parts = [];
@@ -74,8 +85,12 @@ export function generate(text, runText = fs.readFileSync(path.join(HARNESS, "pla
   return [
     "# PROMPTS — 붙여 넣는 완성 프롬프트 (블록 = 명령 하나)",
     "",
+    orderSection(orderText, new Set(by.keys())),
+    "",
+    "# 블록 — 위 순서에서 이름으로 부른다",
+    "",
     "> 블록을 통째로 복사해 Codex 입력칸(`›`)에 붙이고 `<…>` 칸만 바꾼다(선택지 `<가/나>`는 하나만 남긴다) — `$` 인식 여부와 무관, 첫 줄 `$이름`은 있어도 그만. `{…}`는 Codex가 채운다.",
-    "> 생성 파일 — 손으로 고치지 마라. 원본은 하네스 `refs/BOXES.md`, 다시 만들기: `node scripts/gen_prompts.mjs`. 하네스가 `./.harness`에 있으면 `/tmp/harness`를 `./.harness`로 읽는다.",
+    "> 생성 파일 — 손으로 고치지 마라. 원본은 하네스 `refs/BOXES.md`·`refs/ORDER.md`, 다시 만들기: `node scripts/gen_prompts.mjs`. 하네스가 `./.harness`에 있으면 `/tmp/harness`를 `./.harness`로 읽는다.",
     "> 순서는 `RUN.md`와 같다 — 단계(S0~S6)마다 RUN의 번호 단계에서 처음 부르는 순서대로 놓았다. 위에서 아래로 내려가며 붙이면 된다.",
     "",
     ...parts,
