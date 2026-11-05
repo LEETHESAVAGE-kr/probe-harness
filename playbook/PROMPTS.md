@@ -67,7 +67,7 @@ LOG '담당자 대화'의 답 원문(시각 포함)과 README·REQUIREMENTS 원�
 비울 칸: HH:MM ← LOG 담당자 대화 · R번호 ← 결론을 바꾸는 행 · 사유 ← 행마다.
 
 ### s3
-언제: S3 · 48~55분, A 탭에(창 6에서 --scaffold node-v2를 깐 뒤)
+언제: S3 · 48~55분, A 탭에(먼저 창 6 — codex 없는 터미널 — 에서 `cd ~/workspace && node /tmp/harness/bootstrap.mjs --scaffold node-v2`를 직접 친 뒤)
 ```
 $s3
 서버 뼈대를 만들어라. PLAN에서 정한 부품으로 node /tmp/harness/bootstrap.mjs --scaffold node-v2 --with {부품}을 이미 깔았으면 그 server.js에서 시작하고(아래 중 이미 있는 것은 다시 만들지 마라), README가 다른 언어를 정했으면 이 상자 대신 traps 상자를 써라. 아니면 node 내장 http만. 0.0.0.0, PORT 환경변수(기본 3000), GET /health 200, 로그인 1개(역할 2개, 데모 계정 2개를 빈 저장소에서 시작해도 만들고 HOW_TO_RUN 데모 계정 칸에 적을 것은 C에게 요청으로), 쿠키는 HttpOnly만. 라우팅 순서(진입점→인증→검증→계산→저장→응답)를 바꾸면 그 함수 머리에 // [D6] 주석 한 줄. 설정값은 전부 기본값을 둔다. 시작·테스트 명령을 README_RUN.md에, 스모크 테스트 1개(테스트 서버는 PORT=0), 출력은 out/test_result.txt에. 요구 밖 기능은 만들지 마라. 통과하면 [S 3/6] 커밋하고 git show --stat HEAD를 붙인 뒤 멈춰라.

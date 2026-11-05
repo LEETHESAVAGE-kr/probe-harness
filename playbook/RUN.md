@@ -20,7 +20,7 @@
 | 3 | A2 구현 | ○ | medium · fast on | $role-a2 | ○ ([A2] 접두, 자기 파일만) | S4 첫 A 커밋 뒤 |
 | 4 | C 문서 | ○ | medium · fast on | $role-c · 100분 $readme | × | S1~S5 |
 | 5 | D 측정 | ○ | medium · fast on | $role-d · $verify · $screen · $prove | × | S3~S5 |
-| 6 | 터미널 | × | — | clone+bootstrap · git status · curl · check_evidence · rm -rf _playbook | — | 전 구간 |
+| 6 | 터미널 | × (codex 치지 않는다 — `$` 프롬프트에 직접) | — | clone+bootstrap · git status · curl · check_evidence · rm -rf _playbook | — | 전 구간 |
 | 7 | B 리뷰 | ○ | medium · fast on | $role-b · $readme | × | S6만 (새 세션) |
 | 8 | 서버 | × | — | `PORT=3000 node server.js` 하나만(`&` 쓰지 않음, 로그가 이 창에 그대로 보인다. 코드가 바뀌면 Ctrl+C → 같은 명령) | — | S3~ |
 - 규칙 ①: 창 1과 창 2는 같은 시간에 커밋하지 않는다 — S2 끝 PLAN 커밋(창 1) 뒤에 S4 첫 feat(창 2), 163분에 창 2가 멈춘 뒤 창 1이 $decide·$defend. 창 3은 자기 파일만.
@@ -73,7 +73,7 @@
 
 ## S3 뼈대·로그인 눈 확인 (48~55분) — A + C + D
 - 강제 이동: 55분이면 로그인 화면이 안 떠도 ‘debug’ 한 번 뒤 S4로(안 되는 것은 PLAN 한계).
-- 치는 것: 창 6에서 `node /tmp/harness/bootstrap.mjs --scaffold node-v2 --with <PLAN이 정한 부품>`(바닥만이면 `--with` 없이) → 창 5 `codex` → `$role-d` → ‘역할 시작’(첫 일 데이터셋 2벌) → A에 PROMPTS.md ‘s3’ 블록 → 로그인 화면을 본 뒤 ‘기록-로그인 화면’.
+- 치는 것: 창 6(codex 없는 터미널)에서 `cd ~/workspace && node /tmp/harness/bootstrap.mjs --scaffold node-v2 --with <PLAN이 정한 부품>`(바닥만이면 `--with` 없이) → 창 5 `codex` → `$role-d` → ‘역할 시작’(첫 일 데이터셋 2벌) → A에 PROMPTS.md ‘s3’ 블록 → 로그인 화면을 본 뒤 ‘기록-로그인 화면’.
 - 내 눈: bootstrap 출력에 '껍데기 교체 3개'가 있고 Dockerfile 첫 줄이 FROM인가. 창 8 서버 → 창 6 `ss -ltnp | grep 3000`(0.0.0.0)·curl `/health` 200 → Browser Port 3000 · Path `/`에서 **로그인 1회를 내 눈으로**. 계정이 HOW_TO_RUN과 같은가. S3 끝에 D에 ‘screen’.
 - 터지는 것: 빈 화면 → 창 6 `node /tmp/harness/scripts/diag_web.mjs 3000` → 멈춘 단계를 A에 ‘debug’(증상 칸). 로그인이 안 붙으면 쿠키 Secure·SameSite·Domain을 뺀다.
 - 터지는 것: `EADDRINUSE` → 창 8 Ctrl+C → 같은 명령, 안 되면 `PORT=3001`(Browser·HOW_TO_RUN도). Codex가 서버를 띄운 채 멈춤 → Ctrl+C → `서버는 내가 띄운다. 너는 curl만`.

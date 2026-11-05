@@ -112,7 +112,7 @@ README의 그 행이 나온 절·REQUIREMENTS 그 행·LOG '담당자 대화'만
 내 판단: 로그인은 <역할 두 개·데모 계정 두 개/없음(README 범위 밖)> — 이유: 확인하는 사람이 그 길로 들어온다
 확인: 끝나면 내가 out/test_result.txt의 스모크 통과와 curl /health 200을 본다
 ```
-언제: S3 · 48~55분, A 탭에(창 6에서 --scaffold node-v2를 깐 뒤)
+언제: S3 · 48~55분, A 탭에(먼저 창 6 — codex 없는 터미널 — 에서 `cd ~/workspace && node /tmp/harness/bootstrap.mjs --scaffold node-v2`를 직접 친 뒤)
 비울 칸: 선택지 ← README에 로그인·역할 요구가 있나.
 
 ## feat
