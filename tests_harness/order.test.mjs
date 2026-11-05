@@ -20,7 +20,7 @@ const NOT_INPUT = new Set(["$", "- 뼈대 부품:"]);
 // '안 되면' 줄의 증상 인용(내가 치지 않는다)
 const SYMPTOM = new Set(["syntax error near unexpected token", "^[[200~", "EADDRINUSE", "PORT=3001", "$s1", "$s0"]);
 // 코드 따옴표 밖이거나 내 눈 줄에 있지만 내가 치는 답
-const ANSWERS = ["1A 2B 3A 4B", "Q1-A Q2-B Q3-A", "후보 n", "1A 2B", "R25 만들 R26 뺄", "맞다", "D1-A② D2-B① 거부-A③ 고정 절 맞다", "가", "나"];
+const ANSWERS = ["1A 2B 3A 4B", "Q1-A Q2-B Q3-A", "기준 a 후보 n", "1A 2B", "R25 만들 R26 뺄", "맞다", "D1-A② D2-B① 거부-A③ 고정 절 맞다", "가", "나"];
 
 const tokens = l => [...l.matchAll(/`([^`]+)`|‘([^’]+)’/g)].map(m => m[1] ?? m[2]);
 // `$prove`처럼 같은 이름 블록이 있으면 블록 쪽으로 대조한다(블록 첫 줄이 곧 그 명령)
