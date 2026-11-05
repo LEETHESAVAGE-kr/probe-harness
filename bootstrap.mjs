@@ -37,6 +37,15 @@ export const PARTS = {
   docker: ["Dockerfile", ".dockerignore", "scripts/verify_container.sh"],
 };
 
+/** 입력: 작업 폴더 / 출력: PLAN.md '뼈대 부품:' 줄의 부품 배열("없음"이면 []) / 깨지는 조건: PLAN.md나 그 줄이 없거나 비면 Error — $plan이 먼저 채운다 */
+export function partsFromPlan(target) {
+  const f = path.join(target, "PLAN.md");
+  const m = fs.existsSync(f) ? fs.readFileSync(f, "utf8").match(/^[-*\s]*뼈대 부품\s*[:：][ \t]*([^\n]*)$/m) : null;
+  const v = m ? m[1].replace(/[`(（].*$/, "").trim() : "";
+  if (!v) throw new Error("--with plan: PLAN.md에 '뼈대 부품:' 줄이 비어 있다 — 창 1에 `$plan`을 먼저 돌리거나 PLAN에 '뼈대 부품: 없음'을 적는다");
+  return /^(없음|바닥만|none)$/i.test(v) ? [] : v.split(/[\s,·+]+/).filter(Boolean);
+}
+
 /** 입력: argv 배열 / 출력: {mode, scaffold, with, target} / 깨지는 조건: 모르는 값이면 Error */
 export function parseArgs(argv) {
   const o = { mode: "dev", scaffold: "", with: [], target: process.cwd() };
@@ -50,6 +59,8 @@ export function parseArgs(argv) {
   }
   if (!["dev", "docs"].includes(o.mode)) throw new Error(`--mode는 dev|docs: ${o.mode}`);
   if (o.scaffold && !["node", "node-v2", "python"].includes(o.scaffold)) throw new Error(`--scaffold는 node|node-v2|python: ${o.scaffold}`);
+  o.target = path.resolve(o.target);
+  if (o.with.length === 1 && o.with[0] === "plan") o.with = partsFromPlan(o.target);
   if (o.with.includes("all")) o.with = Object.keys(PARTS).filter(p => p !== "base");
   const bad = o.with.filter(p => !PARTS[p] || p === "base");
   if (bad.length) throw new Error(`--with는 ${Object.keys(PARTS).filter(p => p !== "base").join("|")}|all: ${bad.join(",")}`);

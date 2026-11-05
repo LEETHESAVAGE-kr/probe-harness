@@ -35,14 +35,14 @@ test("G-1: playbook은 RUN·PROMPTS·ASK·DEFEND 4개(v2.8 PROMPTS는 생성 파
   for (const f of ["BOXES.md", "TAILS.md", "QUESTION_BANK.md", "ENV_FACTS.md", "DOMAIN_SEMI.md"]) assert.ok(fs.existsSync(path.join(HARNESS, "refs", f)), f);
   assert.match(rd(HARNESS, "bootstrap.sh"), /for f in RUN PROMPTS ASK DEFEND; do/);
 });
-test("G-1: RUN은 단계 7개마다 치는 것·내 눈·터지는 것 2줄, 머리에 탭 6칸(v2.2 기본 2탭+리뷰어)과 가동 수, 끝에 4탭 확장", () => {
+test("G-1: RUN은 단계 7개마다 치는 것·내 눈·안 되면 2줄(번호 단계 밑), 머리에 탭 6칸(v2.2 기본 2탭+리뷰어)과 가동 수, 끝에 4탭 확장", () => {
   const s = rd(HARNESS, "playbook/RUN.md");
   const stages = s.split(/^## (?=S\d )/m).slice(1);
   assert.strictEqual(stages.length, 7);
   for (const st of stages) {
     assert.strictEqual((st.match(/^- 치는 것:/gm) || []).length, 1, st.slice(0, 20));
-    assert.ok((st.match(/^- 내 눈:/gm) || []).length >= 1, st.slice(0, 20));
-    assert.ok((st.match(/^- 터지는 것:/gm) || []).length >= 2, st.slice(0, 20));
+    assert.ok((st.match(/^\s*- 내 눈:/gm) || []).length >= 1, st.slice(0, 20)); // v2.9.2: 시간 순서 번호 단계 밑에 들여 쓴 확인·대처 줄
+    assert.ok((st.match(/^\s*- (터지는 것|안 되면):/gm) || []).length >= 2, st.slice(0, 20));
     assert.match(st.split("\n")[0], /\(\d+~\d+분\)/);
   }
   // v2.6: 3탭(A·C·D) + S6 리뷰어(B) + server·check·spare = 7칸

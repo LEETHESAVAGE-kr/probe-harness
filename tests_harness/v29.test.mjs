@@ -120,3 +120,15 @@ test("C9 $defend 읽기 카드: SKILL·BOXES에 '## 0. 읽기 카드', 줄 머�
   assert.match(rd("refs/BOXES.md"), /## 0\. 읽기 카드/);
   assert.doesNotMatch(rd("playbook/DEFEND.md"), /읽기 카드/);
 });
+
+test("C10 --with plan: PLAN '- 뼈대 부품:' 줄을 읽는다 — 목록·없음·빈 줄(오류), 템플릿에 그 줄이 있다", () => {
+  const d = fs.mkdtempSync(path.join(os.tmpdir(), "v29p-")); boot(parseArgs(["--target", d]), HARNESS);
+  const args = ["--target", d, "--scaffold", "node-v2", "--with", "plan"];
+  assert.match(fs.readFileSync(path.join(d, "PLAN.md"), "utf8"), /^- 뼈대 부품: $/m);
+  assert.throws(() => parseArgs(args), /뼈대 부품/);
+  const put = v => fs.writeFileSync(path.join(d, "PLAN.md"), fs.readFileSync(path.join(d, "PLAN.md"), "utf8").replace(/^- 뼈대 부품:.*$/m, `- 뼈대 부품: ${v}`));
+  put("auth, store,lock"); assert.deepStrictEqual(parseArgs(args).with, ["auth", "store", "lock"]);
+  put("없음"); assert.deepStrictEqual(parseArgs(args).with, []);
+  put("auth,store,모름"); assert.throws(() => parseArgs(args), /--with는/);
+  assert.match(rd("playbook/RUN.md"), /`cd ~\/workspace && node \/tmp\/harness\/bootstrap\.mjs --scaffold node-v2 --with plan`/);
+});
