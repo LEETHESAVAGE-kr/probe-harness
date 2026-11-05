@@ -92,7 +92,7 @@
 ## S3 뼈대·로그인 눈 확인 (48~55분) — A + C + D
 - 강제 이동: 55분이면 로그인 화면이 안 떠도 ‘debug’ 한 번 뒤 S4로(안 되는 것은 PLAN 한계).
 - 치는 것: 아래 1→5 순서대로(붙이는 글은 PROMPTS.md ‘s3’·‘역할 시작’·‘기록-로그인 화면’·‘screen’).
-1. [창 6 — codex 없는 터미널, `$` 프롬프트에 직접] `cd ~/workspace && node /tmp/harness/bootstrap.mjs --scaffold node-v2 --with plan` — 늘 이 한 줄, 부품은 PLAN '뼈대 부품:' 줄에서 읽는다.
+1. [창 6 — codex 없는 터미널, `$` 프롬프트에 직접] `node /tmp/harness/bootstrap.mjs --scaffold node-v2 --with plan` — 늘 이 한 줄, 부품은 PLAN '뼈대 부품:' 줄에서 읽는다.
    - 내 눈: 출력에 '부품 base+…'와 '껍데기 교체 3개', Dockerfile 첫 줄이 FROM.
    - 안 되면: "'뼈대 부품:' 줄이 비어 있다" → [창 1]에 `PLAN '- 뼈대 부품:' 줄만 auth,store,lock,schema,docker 중에서 채워라, 없으면 없음` → 같은 명령.
 2. [창 5] `codex` → `/fast on` → `/model`(medium) → `/status` → `$role-d` → ‘역할 시작’(첫 일 데이터셋 2벌) — Enter 직후 기다리지 말고 3번. 여기서부터 S5까지 **A·C·D 세 탭이 동시에 돈다**.

@@ -55,7 +55,7 @@
    ↳ 안 되면(새로 나옴이 3개 이상): [DM] Codex가 다시 만든 확인 DM → [창 1] 답을 그대로
 
 ## S3 뼈대·로그인 눈 확인 (48~55분)
-1. [창 6] `cd ~/workspace && node /tmp/harness/bootstrap.mjs --scaffold node-v2 --with plan`
+1. [창 6] `node /tmp/harness/bootstrap.mjs --scaffold node-v2 --with plan`
    ↳ 안 되면('뼈대 부품:' 줄이 비어 있다): [창 1] `PLAN '- 뼈대 부품:' 줄만 auth,store,lock,schema,docker 중에서 채워라, 없으면 없음` → 1번 다시
 2. [창 5] `codex` → `/fast on` → `/model`(medium) → `/status` → `$role-d` → 블록 ‘역할 시작’
 3. [창 2] 블록 ‘s3’(S1에서 README가 언어·프레임워크를 정했으면 블록 ‘traps’)
@@ -253,7 +253,7 @@ LOG '담당자 대화'의 답 원문(시각 포함)과 README·REQUIREMENTS 원�
 > 이 단계에서 다시 쓰는 블록(앞 단계에 있음): ‘역할 시작’
 
 ### s3
-언제: S3 · 48~55분, A 탭에(먼저 창 6 — codex 없는 터미널 — 에서 `cd ~/workspace && node /tmp/harness/bootstrap.mjs --scaffold node-v2 --with plan`을 직접 친 뒤)
+언제: S3 · 48~55분, A 탭에(먼저 창 6 — codex 없는 터미널 — 에서 `node /tmp/harness/bootstrap.mjs --scaffold node-v2 --with plan`을 직접 친 뒤)
 ```
 $s3
 서버 뼈대를 만들어라. PLAN '뼈대 부품:' 줄대로 node /tmp/harness/bootstrap.mjs --scaffold node-v2 --with plan 을 이미 깔았으면 그 server.js에서 시작하고(아래 중 이미 있는 것은 다시 만들지 마라), README가 다른 언어를 정했으면 이 상자 대신 traps 상자를 써라. 아니면 node 내장 http만. 0.0.0.0, PORT 환경변수(기본 3000), GET /health 200, 로그인 1개(역할 2개, 데모 계정 2개를 빈 저장소에서 시작해도 만들고 HOW_TO_RUN 데모 계정 칸에 적을 것은 C에게 요청으로), 쿠키는 HttpOnly만. 라우팅 순서(진입점→인증→검증→계산→저장→응답)를 바꾸면 그 함수 머리에 // [D6] 주석 한 줄. 설정값은 전부 기본값을 둔다. 시작·테스트 명령을 README_RUN.md에, 스모크 테스트 1개(테스트 서버는 PORT=0), 출력은 out/test_result.txt에. 요구 밖 기능은 만들지 마라. 통과하면 [S 3/6] 커밋하고 git show --stat HEAD를 붙인 뒤 멈춰라.

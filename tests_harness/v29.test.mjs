@@ -133,5 +133,5 @@ test("C10 --with plan: PLAN '- 뼈대 부품:' 줄을 읽는다 — 목록·없�
   put("auth, store,lock"); assert.deepStrictEqual(parseArgs(args).with, ["auth", "store", "lock"]);
   put("없음"); assert.deepStrictEqual(parseArgs(args).with, []);
   put("auth,store,모름"); assert.throws(() => parseArgs(args), /--with는/);
-  assert.match(rd("playbook/RUN.md"), /`cd ~\/workspace && node \/tmp\/harness\/bootstrap\.mjs --scaffold node-v2 --with plan`/);
+  assert.match(rd("playbook/RUN.md"), /`node \/tmp\/harness\/bootstrap\.mjs --scaffold node-v2 --with plan`/);
 });

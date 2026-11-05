@@ -60,7 +60,7 @@
    ↳ 안 되면(새로 나옴이 3개 이상): [DM] Codex가 다시 만든 확인 DM → [창 1] 답을 그대로
 
 ## S3 뼈대·로그인 눈 확인 (48~55분)
-1. [창 6] `cd ~/workspace && node /tmp/harness/bootstrap.mjs --scaffold node-v2 --with plan`
+1. [창 6] `node /tmp/harness/bootstrap.mjs --scaffold node-v2 --with plan`
    ↳ 안 되면('뼈대 부품:' 줄이 비어 있다): [창 1] `PLAN '- 뼈대 부품:' 줄만 auth,store,lock,schema,docker 중에서 채워라, 없으면 없음` → 1번 다시
 2. [창 5] `codex` → `/fast on` → `/model`(medium) → `/status` → `$role-d` → 블록 ‘역할 시작’
 3. [창 2] 블록 ‘s3’(S1에서 README가 언어·프레임워크를 정했으면 블록 ‘traps’)
