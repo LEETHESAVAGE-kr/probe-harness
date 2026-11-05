@@ -112,7 +112,7 @@ test("C7 RUN·ASK: S0 유형 ①~⑤·속도 3줄·12분 상한·모델 이름 �
 
 test("C9 $defend 읽기 카드: SKILL·BOXES에 '## 0. 읽기 카드', 줄 머리 A~F 6줄, 세 덩어리 앞, [기록 없음] · DEFEND.md에는 없다", () => {
   const s = rd(".agents/skills/defend/SKILL.md");
-  const heads = ["A 왜 그 방식", "B 늘면", "C 동시에", "D 구조", "E 배포", "F 확인"];
+  const heads = ["A 왜 그 방식", "B 늘면", "C AI", "D 구조", "E 배포", "F 확인"];
   const m = s.match(/`## 0\. 읽기 카드` 6줄[\s\S]*?```\n([\s\S]*?)\n\s*```/)[1].split("\n").map(l => l.trim());
   assert.strictEqual(m.length, 6); m.forEach((l, i) => assert.ok(l.startsWith(heads[i]), l));
   assert.ok(s.indexOf("## 0. 읽기 카드") < s.indexOf("읽기 카드 아래에 세 덩어리"));
